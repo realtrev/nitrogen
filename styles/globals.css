@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+@font-face {
+  font-family: "Whitney";
+  src: url("/Whitney-Book-Font.otf");
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: "Whitney", sans-serif;
+  @apply bg-gray-base;
+  outline: none;
+}
+
+::-webkit-scrollbar {
+  width: 0.5rem;
+  height: 0.5rem;
+  @apply bg-gray-base;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* .font-poppins {
+  font-family: 'Poppins', sans-serif;
+} */
+
+.scrollbar-hidden {
+  /* hide on all devices */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  /* hide on Chrome, Safari and Opera */
+  display: none;
+}
+
+#message-chat {
+  overflow-y: scroll;
+  scrollbar-color: #272727 #272727;
+  scrollbar-width: thin;
+}
+
+.font-big {
+  font-family: 'Readex Pro', sans-serif;
+  font-weight: 700;
+}
