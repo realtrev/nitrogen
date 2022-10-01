@@ -47,13 +47,23 @@ a {
   display: none;
 }
 
-#message-chat {
+.scrollbar {
   overflow-y: scroll;
   scrollbar-color: #272727 #272727;
+  scrollbar-width: thin;
+}
+
+.scrollbar-msg {
+  overflow-y: auto;
+  scrollbar-color: #1a1a1a #212121;
   scrollbar-width: thin;
 }
 
 .font-big {
   font-family: 'Readex Pro', sans-serif;
   font-weight: 700;
+}
+
+.wrap-anywhere {
+  word-wrap: anywhere;
 }

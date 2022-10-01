@@ -12,6 +12,7 @@ module.exports = {
         base: '#2a2a2a',
         dark: '#272727',
         darkest: '#212121',
+        black: '#1a1a1a',
       },
       messages: {
         incoming: '#5d5d5d',
