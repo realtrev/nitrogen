@@ -1,8 +1,9 @@
 import { useRef, useState } from "react"
-import { IoSend } from "react-icons/io5"
+import { IoSend, IoPeople, IoSettings } from "react-icons/io5"
 
 export default function Dashboard({ Component, pageProps }) {
   const userId = 1;
+  const username = "John Doe";
   
   const chatName = 'The Nitrogen App';
 
@@ -16,6 +17,25 @@ export default function Dashboard({ Component, pageProps }) {
 
   const [message, setMessage] = useState('');
   const [atBottom, setAtBottom] = useState(true);
+
+  const [channels, setChannels] = useState([
+    {'id': 1, 'name': 'General', 'profileUrl': null, direct: false},
+    {'id': 2, 'name': 'Nitrogen', 'profileUrl': null, direct: true},
+    {'id': 3, 'name': 'Gamer', 'profileUrl': null, direct: true},
+    {'id': 4, 'name': 'Paridax', 'profileUrl': null, direct: true},
+    {'id': 1, 'name': 'General', 'profileUrl': null, direct: false},
+    {'id': 2, 'name': 'Nitrogen', 'profileUrl': null, direct: true},
+    {'id': 3, 'name': 'Gamer', 'profileUrl': null, direct: true},
+    {'id': 4, 'name': 'Paridax', 'profileUrl': null, direct: true},
+    {'id': 1, 'name': 'General', 'profileUrl': null, direct: false},
+    {'id': 2, 'name': 'Nitrogen', 'profileUrl': null, direct: true},
+    {'id': 3, 'name': 'Gamer', 'profileUrl': null, direct: true},
+    {'id': 4, 'name': 'Paridax', 'profileUrl': null, direct: true},
+    {'id': 1, 'name': 'General', 'profileUrl': null, direct: false},
+    {'id': 2, 'name': 'Nitrogen', 'profileUrl': null, direct: true},
+    {'id': 3, 'name': 'Gamer', 'profileUrl': null, direct: true},
+    {'id': 4, 'name': 'Paridax', 'profileUrl': null, direct: true},
+  ]);
  
   useState(() => {
     const messages = [];
@@ -71,9 +91,9 @@ export default function Dashboard({ Component, pageProps }) {
     messageBox.current.value = '';
     manageMessageBox();
     // scroll to bottom 1 ms after the message is sent
-    if(atBottom) {
-      chatBox.current.scrollTop = chatBox.current.scrollHeight;
-    }
+    // if(atBottom) {
+    //   chatBox.current.scrollTop = chatBox.current.scrollHeight;
+    // }
     setSendable(false);
   }
 
@@ -119,10 +139,37 @@ export default function Dashboard({ Component, pageProps }) {
 
   return (
     <div className="w-screen h-screen flex overflow-hidden bg-gray-base">
-      <div className="w-72 h-screen flex-shrink-0"></div>
+      <div className="w-72 h-screen flex-shrink-0 flex flex-col">
+        <div className="h-12 w-full flex items-center justify-center flex-shrink-0">
+          <h1 className="text-secondary font-sans font-semibold text-2xl select-none">nitrogen</h1>
+        </div>
+        <div className="w-full flex flex-col flex-grow overflow-y-scroll scrollbar-msg pl-2 gap-3">
+          {/* <h1 className="text-secondary font-sans font-semibold text-2xl">nitrogen</h1> */}
+          {channels.map((channel, index) => {
+            return(
+              <div className="w-full h-12 hover:bg-white/10 flex items-center gap-2 text-text-sub2 hover:text-white rounded-md px-1 flex-shrink-0" key={index}>
+                <div className="rounded-full bg-primary h-10 aspect-square flex-shrink-0" />
+                <h1 className="text-2xl">{channel.name}</h1>
+              </div>
+            )
+          })}
+        </div>
+        <div className="h-16 w-full flex-shrink-0 bg-gray-dark px-4 flex items-center gap-2">
+          <div className="rounded-full bg-primary h-10 aspect-square flex-shrink-0" />
+          <div className="flex-grow text-white font-whitney font-semibold text-sm select-none">{username}</div>
+          <button className="w-auto flex-shrink-0 h-10 aspect-square flex items-center justify-center hover:bg-white/10 rounded-full">
+            <IoSettings className="text-2xl text-text-sub2" />
+          </button>
+        </div>
+      </div>
       <div className="flex-grow overflow-hidden h-screen flex flex-col">
-        <div className="h-12 flex-shrink-0 hidden">
-
+        <div className="h-12 flex-shrink-0 px-4 flex items-center gap-2">
+          <div className="h-8 aspect-square flex items-center justify-center">
+            <IoPeople className="text-2xl text-text-sub2" />
+          </div>
+          <div>
+            <h1 className="text-white text-lg font-semibold font-beeg">{chatName}</h1>
+          </div>
         </div>
         <div className="flex-grow w-full overflow-y-scroll overflow-x-hidden bg-gray-dark flex pl-4 pr-2 scrollbar pb-2 flex-col-reverse" ref={chatBox} onScroll={manageScroll} onLoad={(e) => {chatBox.current.scrollTop = chatBox.current.scrollHeight}}>
             {sampleChat.map((message, index) => {
@@ -144,8 +191,8 @@ export default function Dashboard({ Component, pageProps }) {
                   return (
                     <div className="flex justify-end items-center pt-5" key={index}>
                       <div className="message relative bg-messages-outgoing rounded-3xl min-h-[3rem] whitespace-pre-wrap flex py-3 items-center px-4 min-w-[3rem] max-w-[75%] justify-center wrap-anywhere">
-                        <p className="text-white">{message.content.text}</p>
                         <div className="w-full h-full absolute select-none rounded-3xl message"></div>
+                        <p className="text-white">{message.content.text}</p>
                         <div suppressHydrationWarning={true} className="hidden-data absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full w-20 text-center text-messages-incoming text-sm select-none">
                             {time}
                         </div>
@@ -201,7 +248,7 @@ export default function Dashboard({ Component, pageProps }) {
             })}
           <div className="p-4 bottom-0 items-center flex flex-col pt-12 select-none">
             <div className="h-20 aspect-square rounded-full bg-primary"></div>
-            <h1 className="font-big font-black text-white text-3xl">{chatName}</h1>
+            <div className="text-white font-beeg font-bold text-3xl">{chatName}</div>
             <h1 className="text-text-subtitle text-xl text-center">This is the beginning of messages in <span className="font-semibold">{chatName}</span>.</h1>
           </div>
           <div className="flex-grow">
@@ -216,7 +263,6 @@ export default function Dashboard({ Component, pageProps }) {
           </button>
         </div>
       </div>
-      <div className="w-72 h-screen flex-shrink-0"></div>
     </div>
   );
 }
