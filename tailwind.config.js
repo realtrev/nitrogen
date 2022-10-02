@@ -27,6 +27,8 @@ module.exports = {
     fontFamily: {
       sans: ['Poppins', 'sans-serif'],
       whitney: ['Whitney', 'sans-serif'],
+      big: ['Readex Pro', 'sans-serif'],
+      beeg: ['Lexend', 'sans-serif'],
     },
     extend: {},
   },
