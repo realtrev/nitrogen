@@ -2,7 +2,7 @@ import { useRef, useState } from "react"
 import { IoSend } from "react-icons/io5"
 
 export default function Dashboard({ Component, pageProps }) {
-  const userId = 2;
+  const userId = 1;
   
   const chatName = 'The Nitrogen App';
 
@@ -15,7 +15,7 @@ export default function Dashboard({ Component, pageProps }) {
   const [sampleChat, setSampleChat] = useState([]);
 
   const [message, setMessage] = useState('');
-  let messagesLoaded = false;
+  const [atBottom, setAtBottom] = useState(true);
  
   useState(() => {
     const messages = [];
@@ -48,23 +48,6 @@ export default function Dashboard({ Component, pageProps }) {
     createMessage('text', { text: 'Good idea.' }, { id: 1, username: 'Gamer' }, new Date())
     createMessage('text', { text: 'Sick. Here\'s a moderately long message again so that we can make sure that messages that are super long work how they\'re supposed to. I\'m actually pretty sure that it breaks when the message is too long.' }, { id: 1, username: 'Gamer' }, new Date())
     setSampleChat(messages);
-    console.log(messages);
-    // wait until the page fully loads before scrolling to the bottom
-    setTimeout(() => {
-      fixScroll();
-    }, 1);
-
-    function fixScroll() {
-      if ((!messageBox.current || !chatBox.current) && !messagesLoaded) {
-        setTimeout(() => {
-          fixScroll();
-        }, 0);
-      } else {
-        messagesLoaded = true;
-        manageMessageBox();
-        chatBox.current.scrollTop = chatBox.current.scrollHeight;
-      }
-    }
   }, []);
 
   function sendMessage(event) {
@@ -84,14 +67,12 @@ export default function Dashboard({ Component, pageProps }) {
       username: 'Gamer',
       date: new Date(),
     }
-    setSampleChat([...sampleChat, messageData]);
+    setSampleChat([messageData, ...sampleChat]);
     messageBox.current.value = '';
     manageMessageBox();
     // scroll to bottom 1 ms after the message is sent
-    if(chatBox.current.scrollTop + chatBox.current.clientHeight === chatBox.current.scrollHeight) {
-      setTimeout(() => {
-        chatBox.current.scrollTop = chatBox.current.scrollHeight;
-      }, 0);
+    if(atBottom) {
+      chatBox.current.scrollTop = chatBox.current.scrollHeight;
     }
     setSendable(false);
   }
@@ -104,12 +85,7 @@ export default function Dashboard({ Component, pageProps }) {
   }
 
   function manageMessageBox() {
-    // set the height of the message box to the scroll height
-    if(chatBox.current.scrollTop + chatBox.current.clientHeight === chatBox.current.scrollHeight) {
-      setTimeout(() => {
-        chatBox.current.scrollTop = chatBox.current.scrollHeight;
-      }, 0);
-    }
+
     setMessage(messageBox.current.value.trim());
     if (!messageBox.current.value) {
       messageBox.current.style.height = '3rem';
@@ -122,12 +98,23 @@ export default function Dashboard({ Component, pageProps }) {
       }
     }
 
+    if(atBottom) {
+      chatBox.current.scrollTop = chatBox.current.scrollHeight;
+    }
+
     if (messageBox.current.value.trim() !== '') {
       setSendable(true);
     } else {
       setSendable(false);
     }
+  }
 
+  function manageScroll() {
+    if(chatBox.current.scrollTop + chatBox.current.clientHeight === chatBox.current.scrollHeight) {
+      setAtBottom(true);
+    } else {
+      setAtBottom(false);
+    }
   }
 
   return (
@@ -137,56 +124,88 @@ export default function Dashboard({ Component, pageProps }) {
         <div className="h-12 flex-shrink-0 hidden">
 
         </div>
-        <div className="flex-grow w-full overflow-y-scroll overflow-x-hidden bg-gray-dark flex flex-col pl-4 pr-2 scrollbar pb-2" ref={chatBox}>
-          <div className="flex-grow">
-          </div>
-          <div className="p-4 bottom-0 items-center flex flex-col pt-12 select-none">
-            <div className="h-20 aspect-square rounded-full bg-primary"></div>
-            <h1 className="font-big font-extrabold text-white text-3xl">{chatName}</h1>
-            <h1 className="text-text-subtitle text-xl text-center">This is the beginning of messages in <span className="font-semibold">{chatName}</span>.</h1>
-          </div>
-            {sampleChat.map((message, index) => {
-              if (message.author === userId) {
-              if(index === 0 || sampleChat[index - 1].author !== message.author) {
-                return (
-                  <div className="flex justify-end items-center pt-5" key={index}>
-                    <div className="bg-messages-outgoing rounded-3xl min-h-[3rem] whitespace-pre-wrap flex py-3 items-center px-4 min-w-[3rem] max-w-[75%] justify-center wrap-anywhere">
-                      <p className="text-white">{message.content.text}</p>
-                    </div>
-                  </div>
-                )
-              } else {
-                return (
-                  <div className="flex justify-end items-center pt-1" key={index}>
-                    <div className="bg-messages-outgoing rounded-3xl min-h-[3rem] whitespace-pre-wrap flex py-3 items-center px-4 min-w-[3rem] max-w-[75%] justify-center wrap-anywhere">
-                      <p className="text-white">{message.content.text}</p>
-                    </div>
-                  </div>
-                )
+        <div className="flex-grow w-full overflow-y-scroll overflow-x-hidden bg-gray-dark flex pl-4 pr-2 scrollbar pb-2 flex-col-reverse" ref={chatBox} onScroll={manageScroll} onLoad={(e) => {chatBox.current.scrollTop = chatBox.current.scrollHeight}}>
+            {sampleChat.reverse().map((message, index) => {
+              if(index === sampleChat.length && atBottom) {
+                setTimeout(() => {
+                  chatBox.current.scrollTop = chatBox.current.scrollHeight;
+                }, 0);
               }
-            } else {
-              if(index === 0 || sampleChat[index - 1].author !== message.author) {
-                return (
-                  <div className="" key={index}>
-                    <div className="h-5 pl-[4.5rem] text-text-sub2 text-xs select-none">{message.username}</div>
-                    <div className="flex gap-2">
-                      <div className="bg-gray-darkest rounded-full h-12 aspect-square"></div>
-                      <div className = "bg-messages-incoming rounded-3xl whitespace-pre-wrap min-h-[3rem] py-3 flex items-center px-4 min-w-[3rem] max-w-[75%] justify-center wrap-anywhere">
+
+              const lastMessage = index === sampleChat.length;
+              const prevMessage = index + 1 < sampleChat.length ? sampleChat[index + 1] : null;
+              const messageAuthor = message.author;
+              const username = message.username;
+              // get time HH:HH AM/PM
+              const time = message.date.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+
+              if (messageAuthor === userId) {
+                if(!prevMessage || prevMessage.author !== userId) {
+                  return (
+                    <div className="flex justify-end items-center pt-5" key={index}>
+                      <div className="message relative bg-messages-outgoing rounded-3xl min-h-[3rem] whitespace-pre-wrap flex py-3 items-center px-4 min-w-[3rem] max-w-[75%] justify-center wrap-anywhere">
                         <p className="text-white">{message.content.text}</p>
+                        <div className="w-full h-full absolute select-none rounded-3xl message"></div>
+                        <div className="hidden-data absolute left-0 top-1/2 -translate-y-1/2 -translate-x-16 text-messages-incoming text-sm select-none">
+                            {time}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )
-              } else {
-                return (
-                  <div className="flex pt-1 pl-14" key={index}>
-                    <div className = "bg-messages-incoming rounded-3xl whitespace-pre-wrap min-h-[3rem] py-3 flex items-center px-4 min-w-[3rem] max-w-[75%] justify-center wrap-anywhere">
-                      <p className="text-white">{message.content.text}</p>
+                  )
+                } else {
+                  return (
+                    <div className="flex justify-end items-center pt-1" key={index}>
+                      <div className="message relative bg-messages-outgoing rounded-3xl min-h-[3rem] whitespace-pre-wrap flex py-3 items-center px-4 min-w-[3rem] max-w-[75%] justify-center wrap-anywhere">
+                        <p className="text-white">{message.content.text}</p>
+                        <div className="w-full h-full absolute select-none rounded-3xl message"></div>
+                        <div className="hidden-data absolute left-0 top-1/2 -translate-y-1/2 -translate-x-16 text-messages-incoming text-sm select-none">
+                            {time}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                )                
-            }
-          }})}
+                  )
+                }
+              } else {
+                if(!prevMessage || prevMessage.author === userId) {
+                  return (
+                    <div key={index}>
+                      <div className="h-5 pl-[4.5rem] text-text-sub2 text-xs select-none">
+                        <p className="">{message.username}</p>
+                      </div>
+                      <div className="flex gap-2">
+                        <div className="bg-gray-darkest rounded-full h-12 aspect-square"></div>
+                        <div className = "bg-messages-incoming relative rounded-3xl whitespace-pre-wrap min-h-[3rem] py-3 flex items-center px-4 min-w-[3rem] max-w-[75%] justify-center wrap-anywhere">
+                          <div className="w-full h-full absolute select-none rounded-3xl message"></div>
+                          <p className="text-white">{message.content.text}</p>
+                          <div className="hidden-data absolute right-0 top-1/2 -translate-y-1/2 translate-x-16 text-messages-incoming text-sm select-none">
+                            {time}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                } else {
+                  return (
+                    <div className="flex pt-1 pl-14" key={index}>
+                      <div className = "message relative bg-messages-incoming rounded-3xl whitespace-pre-wrap min-h-[3rem] py-3 flex items-center px-4 min-w-[3rem] max-w-[75%] justify-center wrap-anywhere">
+                        <p className="text-white">{message.content.text}</p>
+                        <div className="w-full h-full absolute select-none rounded-3xl message"></div>
+                        <div className="hidden-data absolute right-0 top-1/2 -translate-y-1/2 translate-x-16 text-messages-incoming text-sm select-none">
+                            {time}
+                        </div>
+                      </div>
+                    </div>
+                  )                
+                }
+              }
+            })}
+          <div className="p-4 bottom-0 items-center flex flex-col pt-12 select-none">
+            <div className="h-20 aspect-square rounded-full bg-primary"></div>
+            <h1 className="font-big font-black text-white text-3xl">{chatName}</h1>
+            <h1 className="text-text-subtitle text-xl text-center">This is the beginning of messages in <span className="font-semibold">{chatName}</span>.</h1>
+          </div>
+          <div className="flex-grow">
+          </div>
         </div>
         <div className="h-auto bottom-0 py-2 w-full pl-12 pr-4 flex gap-2 flex-shrink-0 bg-gray-dark">
           <div ref={messageContainer} className="overflow-hidden shrink-0 ml-6 rounded-3xl flex-grow" >
