@@ -4,7 +4,35 @@ import { IoSend } from "react-icons/io5"
 export default function Dashboard({ Component, pageProps }) {
   const userId = 1;
   
-  const chatName = 'The Nitrogen App';
+  const [chatName, setChatName] = useState('The Nitrogen App');
+  const [channelMembers, setChannelMembers] = useState([
+    { id: 1, username: 'Gamer' },
+    { id: 2, username: 'Nitrogen' },
+    { id: 1, username: 'Gamer' },
+    { id: 2, username: 'Nitrogen' },
+    { id: 1, username: 'Gamer' },
+    { id: 2, username: 'Nitrogen' },
+    { id: 1, username: 'Gamer' },
+    { id: 2, username: 'Nitrogen' },
+    { id: 1, username: 'Gamer' },
+    { id: 2, username: 'Nitrogen' },
+    { id: 1, username: 'Gamer' },
+    { id: 2, username: 'Nitrogen' },
+    { id: 1, username: 'Gamer' },
+    { id: 2, username: 'Nitrogen' },
+    { id: 1, username: 'Gamer' },
+    { id: 2, username: 'Nitrogen' },
+    { id: 1, username: 'Gamer' },
+    { id: 2, username: 'Nitrogen' },
+    { id: 1, username: 'Gamer' },
+    { id: 2, username: 'Nitrogen' },
+    { id: 1, username: 'Gamer' },
+    { id: 2, username: 'Nitrogen' },
+    { id: 1, username: 'Gamer' },
+    { id: 2, username: 'Nitrogen' },
+    { id: 1, username: 'Gamer' },
+    { id: 2, username: 'Nitrogen' },
+  ]);
 
   const messageBox = useRef(null);
   const chatBox = useRef(null);
@@ -119,10 +147,14 @@ export default function Dashboard({ Component, pageProps }) {
 
   return (
     <div className="w-screen h-screen flex overflow-hidden bg-gray-base">
-      <div className="w-72 h-screen flex-shrink-0"></div>
-      <div className="flex-grow overflow-hidden h-screen flex flex-col">
-        <div className="h-12 flex-shrink-0 hidden">
+      <div className="w-72 h-screen flex-shrink-0">
 
+      </div>
+      <div className="flex-grow overflow-hidden h-screen flex flex-col">
+        <div className="flex-shrink-0 px-4 flex items-center py-2 gap-2">
+          <div className="rounded-full h-12 aspect-square flex items-center justify-center duration-200 outline-none gradient">
+          </div>
+          <input className="font-big font-black text-white text-lg bg-gray-base outline-none border border-opacity-0 hover:bg-gray-dark focus:bg-gray-dark focus:border-opacity-100 border-gray-darkest rounded px-1" defaultValue={chatName}></input>
         </div>
         <div className="flex-grow w-full overflow-y-scroll overflow-x-hidden bg-gray-dark flex pl-4 pr-2 scrollbar pb-2 flex-col-reverse" ref={chatBox} onScroll={manageScroll} onLoad={(e) => {chatBox.current.scrollTop = chatBox.current.scrollHeight}}>
             {sampleChat.map((message, index) => {
@@ -216,7 +248,21 @@ export default function Dashboard({ Component, pageProps }) {
           </button>
         </div>
       </div>
-      <div className="w-72 h-screen flex-shrink-0"></div>
+      <div className="w-72 h-screen flex-shrink-0 pl-2 pr-0 overflow-hidden">
+        <div className="w-full h-16 shrink-0 flex items-center pl-2 pr-4">
+          <input style={{height: '3rem'}} className="scrollbar-msg w-full px-4 rounded-full bg-gray-darkest outline-none text-white resize-none flex text-base scrollbar-hidden py-3 font-whitney placeholder-text-sub2" placeholder="Search"></input>
+        </div>
+        <div className="flex flex-col gap-0.5 flex-grow scrollbar-base overflow-y-scroll">
+        {channelMembers.map((member, index) => {
+            return(
+            <div key={index} className="w-full flex items-center gap-2 hover:bg-white/10 rounded p-1 select-none hover:cursor-pointer text-text-sub2 hover:text-white">
+              <div className="w-12 h-12 rounded-full gradient"></div>
+              <p className="font-whitney text-lg">{member.username}</p>
+            </div>
+            )
+        })}
+        </div>
+      </div>
     </div>
   );
 }

@@ -53,10 +53,16 @@ a {
   scrollbar-width: thin;
 }
 
+.scrollbar-base {
+  overflow-y: scroll;
+  scrollbar-color: #2a2a2a #2a2a2a;
+  scrollbar-width: thin;
+}
+
 .scrollbar-msg {
   overflow-y: auto;
   scrollbar-color: #1a1a1a #212121;
-  scrollbar-width: thin;
+  scrollbar-width: 1rem;
 }
 
 .font-big {
@@ -74,4 +80,8 @@ a {
 
 .message:hover ~ .hidden-data {
   opacity: 1;
+}
+
+.gradient {
+  @apply bg-gradient-to-tl from-primary to-secondary
 }
