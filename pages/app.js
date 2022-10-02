@@ -146,7 +146,7 @@ export default function Dashboard({ Component, pageProps }) {
                       <div className="message relative bg-messages-outgoing rounded-3xl min-h-[3rem] whitespace-pre-wrap flex py-3 items-center px-4 min-w-[3rem] max-w-[75%] justify-center wrap-anywhere">
                         <p className="text-white">{message.content.text}</p>
                         <div className="w-full h-full absolute select-none rounded-3xl message"></div>
-                        <div suppressHydrationWarning={true} className="hidden-data absolute left-0 top-1/2 -translate-y-1/2 -translate-x-16 text-messages-incoming text-sm select-none">
+                        <div suppressHydrationWarning={true} className="hidden-data absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full w-20 text-center text-messages-incoming text-sm select-none">
                             {time}
                         </div>
                       </div>
@@ -158,7 +158,7 @@ export default function Dashboard({ Component, pageProps }) {
                       <div className="message relative bg-messages-outgoing rounded-3xl min-h-[3rem] whitespace-pre-wrap flex py-3 items-center px-4 min-w-[3rem] max-w-[75%] justify-center wrap-anywhere">
                         <p className="text-white">{message.content.text}</p>
                         <div className="w-full h-full absolute select-none rounded-3xl message"></div>
-                        <div suppressHydrationWarning={true} className="hidden-data absolute left-0 top-1/2 -translate-y-1/2 -translate-x-16 text-messages-incoming text-sm select-none">
+                        <div suppressHydrationWarning={true} className="hidden-data absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full w-20 text-center text-messages-incoming text-sm select-none">
                             {time}
                         </div>
                       </div>
@@ -177,7 +177,7 @@ export default function Dashboard({ Component, pageProps }) {
                         <div className = "bg-messages-incoming relative rounded-3xl whitespace-pre-wrap min-h-[3rem] py-3 flex items-center px-4 min-w-[3rem] max-w-[75%] justify-center wrap-anywhere">
                           <div className="w-full h-full absolute select-none rounded-3xl message"></div>
                           <p className="text-white">{message.content.text}</p>
-                          <div suppressHydrationWarning={true} className="hidden-data absolute right-0 top-1/2 -translate-y-1/2 translate-x-16 text-messages-incoming text-sm select-none">
+                          <div suppressHydrationWarning={true} className="hidden-data absolute right-0 top-1/2 -translate-y-1/2 translate-x-full w-20 text-center text-messages-incoming text-sm select-none">
                             {time}
                           </div>
                         </div>
@@ -190,7 +190,7 @@ export default function Dashboard({ Component, pageProps }) {
                       <div className = "message relative bg-messages-incoming rounded-3xl whitespace-pre-wrap min-h-[3rem] py-3 flex items-center px-4 min-w-[3rem] max-w-[75%] justify-center wrap-anywhere">
                         <p className="text-white">{message.content.text}</p>
                         <div className="w-full h-full absolute select-none rounded-3xl message"></div>
-                        <div suppressHydrationWarning={true} className="hidden-data absolute right-0 top-1/2 -translate-y-1/2 translate-x-16 text-messages-incoming text-sm select-none">
+                        <div suppressHydrationWarning={true} className="hidden-data absolute right-0 top-1/2 -translate-y-1/2 translate-x-full w-20 text-center text-messages-incoming text-sm select-none">
                             {time}
                         </div>
                       </div>
