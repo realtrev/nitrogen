@@ -137,7 +137,7 @@ export default function Dashboard({ Component, pageProps }) {
               const messageAuthor = message.author;
               const username = message.username;
               // get time HH:HH AM/PM
-              const time = '12:00 PM' // message.date.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+              const time = message.date.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
 
               if (messageAuthor === userId) {
                 if(!prevMessage || prevMessage.author !== userId) {
