@@ -30,7 +30,7 @@ export default function Dashboard({ Component, pageProps }) {
         username: author.username,
         date: date,
       }
-      messages.push(messageData);
+      messages.unshift(messageData);
     }
 
     createMessage('text', { text: 'Hey!' }, { id: 1, username: 'Gamer' }, new Date())
@@ -67,7 +67,7 @@ export default function Dashboard({ Component, pageProps }) {
       username: 'Gamer',
       date: new Date(),
     }
-    setSampleChat([messageData, ...sampleChat]);
+    setSampleChat([messageData, ...sampleChat,]);
     messageBox.current.value = '';
     manageMessageBox();
     // scroll to bottom 1 ms after the message is sent
@@ -125,7 +125,7 @@ export default function Dashboard({ Component, pageProps }) {
 
         </div>
         <div className="flex-grow w-full overflow-y-scroll overflow-x-hidden bg-gray-dark flex pl-4 pr-2 scrollbar pb-2 flex-col-reverse" ref={chatBox} onScroll={manageScroll} onLoad={(e) => {chatBox.current.scrollTop = chatBox.current.scrollHeight}}>
-            {sampleChat.reverse().map((message, index) => {
+            {sampleChat.map((message, index) => {
               if(index === sampleChat.length && atBottom) {
                 setTimeout(() => {
                   chatBox.current.scrollTop = chatBox.current.scrollHeight;
