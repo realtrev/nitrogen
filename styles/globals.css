@@ -67,3 +67,11 @@ a {
 .wrap-anywhere {
   word-wrap: anywhere;
 }
+
+.message ~ .hidden-data {
+  opacity: 0;
+}
+
+.message:hover ~ .hidden-data {
+  opacity: 1;
+}
