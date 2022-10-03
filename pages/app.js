@@ -3,7 +3,7 @@ import { IoSend, IoPeople, IoSettings } from "react-icons/io5"
 
 export default function Dashboard({ Component, pageProps }) {
   const userId = 1;
-  const username = "John Doe";
+  const username = 'Paridax';
   
   const chatName = 'The Nitrogen App';
 
@@ -138,32 +138,34 @@ export default function Dashboard({ Component, pageProps }) {
   }
 
   return (
-    <div className="w-screen h-screen flex overflow-hidden bg-gray-base">
-      <div className="w-72 h-screen flex-shrink-0 flex flex-col">
+    <div className="w-screen h-screen flex overflow-hidden gap-4 p-4">
+      <div className="w-72 h-full flex-shrink-0 flex flex-col gap-4">
         <div className="h-12 w-full flex items-center justify-center flex-shrink-0">
           <h1 className="text-secondary font-sans font-semibold text-2xl select-none">nitrogen</h1>
         </div>
-        <div className="w-full flex flex-col flex-grow overflow-y-scroll scrollbar-msg pl-2 gap-3">
-          {/* <h1 className="text-secondary font-sans font-semibold text-2xl">nitrogen</h1> */}
-          {channels.map((channel, index) => {
-            return(
-              <div className="w-full h-12 hover:bg-white/10 flex items-center gap-2 text-text-sub2 hover:text-white rounded-md px-1 flex-shrink-0" key={index}>
-                <div className="rounded-full bg-primary h-10 aspect-square flex-shrink-0" />
-                <h1 className="text-2xl">{channel.name}</h1>
-              </div>
-            )
-          })}
+        <div className="w-full flex flex-col flex-grow overflow-y-scroll overflow-hidden scrollbar-msg pl-2 gap-3 rounded-3xl">
+          <div className="w-full flex flex-col flex-grow overflow-y-scroll overflow-hidden scrollbar-msg pl-2 gap-3 rounded-3xl">
+            {/* <h1 className="text-secondary font-sans font-semibold text-2xl">nitrogen</h1> */}
+            {channels.map((channel, index) => {
+              return(
+                <div className="w-full h-12 hover:bg-white/10 flex items-center gap-2 text-text-sub2 hover:text-white rounded-3xl px-1 flex-shrink-0" key={index}>
+                  <div className="rounded-full bg-primary h-10 aspect-square flex-shrink-0" />
+                  <h1 className="text-2xl">{channel.name}</h1>
+                </div>
+              )
+            })}
+          </div>
         </div>
-        <div className="h-16 w-full flex-shrink-0 bg-gray-dark px-4 flex items-center gap-2">
-          <div className="rounded-full bg-primary h-10 aspect-square flex-shrink-0" />
-          <div className="flex-grow text-white font-whitney font-semibold text-sm select-none">{username}</div>
+        <div className="h-20 rounded-3xl w-full flex-shrink-0 bg-gray-dark px-4 flex items-center gap-2">
+          <div className="rounded-full bg-primary h-12 aspect-square flex-shrink-0" />
+          <div className="flex-grow text-white font-whitney font-semibold text-base select-none">{username}</div>
           <button className="w-auto flex-shrink-0 h-10 aspect-square flex items-center justify-center hover:bg-white/10 rounded-full">
             <IoSettings className="text-2xl text-text-sub2" />
           </button>
         </div>
       </div>
-      <div className="flex-grow overflow-hidden h-screen flex flex-col">
-        <div className="h-12 flex-shrink-0 px-4 flex items-center gap-2">
+      <div className="flex-grow overflow-hidden h-full flex flex-col">
+        <div className="h-12 flex-shrink-0 px-4 flex items-center gap-2 mb-4">
           <div className="h-8 aspect-square flex items-center justify-center">
             <IoPeople className="text-2xl text-text-sub2" />
           </div>
@@ -171,7 +173,7 @@ export default function Dashboard({ Component, pageProps }) {
             <h1 className="text-white text-lg font-semibold font-beeg">{chatName}</h1>
           </div>
         </div>
-        <div className="flex-grow w-full overflow-y-scroll overflow-x-hidden bg-gray-dark flex pl-4 pr-2 scrollbar pb-2 flex-col-reverse" ref={chatBox} onScroll={manageScroll} onLoad={(e) => {chatBox.current.scrollTop = chatBox.current.scrollHeight}}>
+        <div className="rounded-t-3xl flex-grow w-full overflow-y-scroll overflow-x-hidden bg-gray-dark flex pl-4 pr-2 scrollbar pb-2 flex-col-reverse" ref={chatBox} onScroll={manageScroll} onLoad={(e) => {chatBox.current.scrollTop = chatBox.current.scrollHeight}}>
             {sampleChat.map((message, index) => {
               if(index === sampleChat.length && atBottom) {
                 setTimeout(() => {
@@ -246,16 +248,11 @@ export default function Dashboard({ Component, pageProps }) {
                 }
               }
             })}
-          <div className="p-4 bottom-0 items-center flex flex-col pt-12 select-none">
-            <div className="h-20 aspect-square rounded-full bg-primary"></div>
-            <div className="text-white font-beeg font-bold text-3xl">{chatName}</div>
-            <h1 className="text-text-subtitle text-xl text-center">This is the beginning of messages in <span className="font-semibold">{chatName}</span>.</h1>
-          </div>
           <div className="flex-grow">
           </div>
         </div>
-        <div className="h-auto bottom-0 py-2 w-full pl-12 pr-4 flex gap-2 flex-shrink-0 bg-gray-dark">
-          <div ref={messageContainer} className="overflow-hidden shrink-0 ml-6 rounded-3xl flex-grow" >
+        <div className="h-auto bottom-0 p-4 w-full flex gap-2 flex-shrink-0 bg-gray-dark rounded-b-3xl">
+          <div ref={messageContainer} className="overflow-hidden shrink-0 rounded-3xl flex-grow" >
             <textarea style={{height: '3rem'}} className="scrollbar-msg w-full px-4 bg-gray-darkest outline-none text-white resize-none flex text-base scrollbar-hidden py-3 font-whitney placeholder-text-sub2" placeholder="Message the chat" onKeyDown={manageKeyPress} onChange={(e) => manageMessageBox()} ref={messageBox}></textarea>
           </div>
           <button className={`rounded-full h-12 aspect-square flex items-center justify-center duration-200 outline-none ${sendable ? 'bg-messages-outgoing' : 'bg-messages-incoming '}`} disabled={!sendable} onClick={sendMessage}>
