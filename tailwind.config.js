@@ -4,33 +4,32 @@ module.exports = {
   content: [],
   theme: {
     colors: {
-      primary: '#6d31cf',
-      secondary: '#ff8155',
-      tertiary: '#ffc04b',
+      primary: {
+        1: '#4295FF',
+        2: '#1F2B38',
+      },
+      green: '#2be831',
+      red: '#ff6060',
       white: '#ffffff',
-      gray: {
-        base: '#2a2a2a',
-        dark: '#272727',
-        darkest: '#212121',
-        black: '#1a1a1a',
-      },
-      messages: {
-        incoming: '#5d5d5d',
-        outgoing: '#6d31cf',
-      },
-      text: {
-        title: '#ffffff',
-        subtitle: '#b4b4b4',
-        sub2: '#8c8c8c',
-      }
+      sub: '#4b4a52',
+      sub2: '#4c505c',
+      gray: '#78777d',
+      high: '#32353a',
+      message: '#25272D',
+      mid: '#1e1d27', // sidebars
+      dark: '#17191F', // center
+      darker: '#191821',
+      black: '#121318', // message box
+      void: '#0D0D11', // 1px border
     },
     fontFamily: {
-      sans: ['Poppins', 'sans-serif'],
-      whitney: ['Whitney', 'sans-serif'],
-      big: ['Readex Pro', 'sans-serif'],
-      beeg: ['Lexend', 'sans-serif'],
+      sans: ['Manrope', 'sans-serif'],
     },
-    extend: {},
+    extend: {
+      fontSize: {
+        '2xs': '0.72rem',
+      },
+    },
   },
   plugins: [],
 }

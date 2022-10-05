@@ -2,75 +2,187 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
+/* @font-face {
   font-family: "Whitney";
   src: url("/Whitney-Book-Font.otf");
-}
+} */
 
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: "Whitney", sans-serif;
-  @apply bg-gray-base;
+  /* font-variation-settings: "wght" 375, "GRAD" 88; */
   outline: none;
+  background: #010101;
+  overflow: hidden;
 }
 
-::-webkit-scrollbar {
-  width: 0.5rem;
-  height: 0.5rem;
-  @apply bg-gray-base;
+h1, div, p, input {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 500;
 }
 
 a {
-  color: inherit;
-  text-decoration: none;
+  @apply text-primary-1;
+  text-decoration: underline;
 }
 
 * {
   box-sizing: border-box;
 }
 
-/* .font-poppins {
-  font-family: 'Poppins', sans-serif;
-} */
 
-.scrollbar-hidden {
-  /* hide on all devices */
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+
+.green {
+  --pdx-gradient: rgba(0, 255, 0, 0.2);
 }
 
-.scrollbar-hidden::-webkit-scrollbar {
-  /* hide on Chrome, Safari and Opera */
-  display: none;
+.purple {
+  --pdx-gradient: rgba(255, 0, 255, 0.2);
 }
 
-.scrollbar {
-  overflow-y: scroll;
-  scrollbar-color: #272727 #272727;
+.blue {
+  --pdx-gradient: rgba(0, 0, 255, 0.2);
+}
+
+.big {
+  --pdx-size: 200%;
+}
+
+.medium {
+  --pdx-size: 150%;
+}
+
+.small {
+  --pdx-size: 100%;
+}
+
+.blue-inside {
+  --pdx-gradient: rgba(0, 0, 255, 0.1);
+}
+
+.purple-inside {
+  --pdx-gradient: rgba(255, 0, 255, 0.1);
+}
+
+.green-inside {
+  --pdx-gradient: rgba(0, 255, 0, 0.1);
+}
+
+.radial-gradient {
+  position: absolute;
+  height: var(--pdx-size);
+  aspect-ratio: 1/1;
+  background: radial-gradient(
+    circle closest-side,
+    var(--pdx-gradient) 0%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+
+/* make a border gradient that fades from opacity 0 to gray */
+.bg-gradient {
+  padding: 1px;
+  background: linear-gradient(
+    45deg,
+    #FFFFFF00 0%,
+    #FFFFFF55 100%
+  );
+}
+
+.msg-gradient {
+  padding: 1px;
+  background: linear-gradient(
+    45deg,
+    #FFFFFF00 0%,
+    #4295FF55 100%
+  );
+}
+
+.msg-gradient-gray {
+  padding: 1px;
+  background: linear-gradient(
+    45deg,
+    #FFFFFF00 0%,
+    #78777d55 100%
+  );
+}
+
+/* scrollbar hidden */
+.bar-hidden::-webkit-scrollbar {
+  width: 0;
+}
+
+/* scrollbar hidden */
+.bar-hidden {
+  scrollbar-width: none;
+}
+
+.chat-scrollbar {
   scrollbar-width: thin;
+  scrollbar-color: #17191F #17191F;
 }
 
-.scrollbar-msg {
-  overflow-y: auto;
-  scrollbar-color: #1a1a1a #212121;
-  scrollbar-width: thin;
+.chat-scrollbar:hover {
+  scrollbar-color: #25272D #17191F;
 }
 
-.font-big {
-  font-family: 'Readex Pro', sans-serif;
-  font-weight: 700;
+.chat-scrollbar::-webkit-scrollbar-thumb {
+  background: #25272D;
+  border-radius: 2px;
 }
 
-.wrap-anywhere {
-  word-wrap: anywhere;
+.chat-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #32353a;
+  border-radius: 2px;
+}
+
+
+.chat-scrollbar::-webkit-scrollbar {
+  width: 8px;
 }
 
 .message ~ .hidden-data {
   opacity: 0;
+  user-select: none;
 }
 
 .message:hover ~ .hidden-data {
   opacity: 1;
+}
+
+.msg-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #121318 #121318;
+}
+
+.msg-scrollbar:hover {
+  scrollbar-color: #17191F #121318;
+}
+
+.msg-scrollbar::-webkit-scrollbar-thumb {
+  background: #121318;
+  border-radius: 2px;
+}
+
+.msg-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #17191F;
+  border-radius: 2px;
+}
+
+
+.msg-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* 90 degree gradient from dark to transparent */
+.fade-off {
+  background: linear-gradient(
+    0deg,
+    #17191FFF 0%,
+    #17191FCC 25%,
+    #17191FAA 50%,
+    #00000000 100%
+  );
 }
