@@ -13,6 +13,7 @@ module.exports = {
       white: '#ffffff',
       sub: '#4b4a52',
       sub2: '#4c505c',
+      sub3: '#8c8b90',
       gray: '#78777d',
       high: '#32353a',
       message: '#25272D',
