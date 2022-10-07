@@ -6,10 +6,11 @@ module.exports = {
     colors: {
       primary: {
         1: '#4295FF',
-        2: '#1F2B38',
+        2: '#233159', // 1F2B38
       },
       green: '#2be831',
       red: '#ff6060',
+      gold: '#fbb345',
       white: '#ffffff',
       sub: '#4b4a52',
       sub2: '#4c505c',
@@ -25,6 +26,15 @@ module.exports = {
     },
     fontFamily: {
       sans: ['Manrope', 'sans-serif'],
+    },
+    fontWeight: {
+      light: 300,
+      normal: 500,
+      medium: 600,
+      semibold: 600,
+      bold: 600,
+      extrabold: 700,
+      black: 700,
     },
     extend: {
       fontSize: {

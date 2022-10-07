@@ -2,10 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* @font-face {
-  font-family: "Whitney";
-  src: url("/Whitney-Book-Font.otf");
-} */
 
 html,
 body {
@@ -18,7 +14,7 @@ body {
 }
 
 h1, div, p, input {
-  font-family: 'Manrope', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 500;
 }
 

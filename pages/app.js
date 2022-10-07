@@ -1,14 +1,10 @@
 import { useRef, useState, useEffect, componentDidMount } from "react"
-import { RiEmotionLine, RiSettings3Line, RiSendPlane2Line, RiSearchLine } from "react-icons/ri"
-import SimpleBar from 'simplebar-react';
-import 'simplebar-react/dist/simplebar.min.css';
-import Image from "next/image"
+import { RiEmotionLine, RiSettings3Line, RiSendPlane2Line, RiSearchLine, RiChat4Line, RiChatVoiceLine, RiStarSLine, RiStarSFill, RiHashtag, RiVolumeUpLine, RiHome5Line } from "react-icons/ri"
 import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
-import Twemoji from 'react-twemoji';
 
 export default function Dashboard({ Component, pageProps }) {
-  
+
   const chatName = 'The Nitrogen App';
 
   const messageBox = useRef(null);
@@ -30,26 +26,73 @@ export default function Dashboard({ Component, pageProps }) {
     '\ud83d[\ude80-\udeff]', // U+1F680 to U+1F6FF
     ' ', // Also allow spaces
   ].join('|');
-  
+
   const removeEmoji = str => str.replace(new RegExp(ranges, 'g'), '');
   const isOnlyEmojis = str => !removeEmoji(str).length;
   const lengthNoSpaces = str => str.replace(/\s/g, '').length;
 
   const users = new Map();
-  users.set("342013001479749643", {id: 342013001479749643, name: 'AugieDog08', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=32'});
-  users.set("465613580096765973", {id: 465613580096765973, name: 'Paridax', profileUrl: 'https://cdn.discordapp.com/avatars/465613580096765973/460377a42559ec2d86c111f95f94c663.webp?size=32'});
-  users.set("762765642830315530", {id: 762765642830315530, name: 'FatRatWithAHat', profileUrl: 'https://cdn.discordapp.com/avatars/762765642830315530/d97c52aa52dd654cb5019f9b72048094.webp?size=32'});
-  users.set("457710227240779790", {id: 457710227240779790, name: 'Cloudyy', profileUrl: 'https://cdn.discordapp.com/avatars/457710227240779790/4375a48ba3b6302e454620dc2b133000.webp?size=32'});
-  users.set("494249333986689035", {id: 494249333986689035, name: 'Countwinston', profileUrl: 'https://cdn.discordapp.com/avatars/494249333986689035/0d02459acd8fc96d8a7950a3d5fa0cde.webp?size=32'});
-  users.set("11234", {id: 11234, name: 'BOT Carbon', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=32'});
-  users.set("12234", {id: 11235, name: 'BOT Nitrogen', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=32'});
-  users.set("11", {id: 11, name: 'nogel', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=32'});
-  users.set("12", {id: 12, name: 'adritempo', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=32'});
-  users.set("13", {id: 13, name: 'Onii-chan', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=32'});
-  users.set("14", {id: 14, name: 'ParidAlt', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=32'});
-  users.set("15", {id: 15, name: 'ChilledPaper', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=32'});
-  users.set("16", {id: 16, name: 'MasterColbat', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=32'});
+  users.set("342013001479749643", {id: 342013001479749643, name: 'AugieDog08', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=80'});
+  users.set("465613580096765973", {id: 465613580096765973, name: 'Paridax', profileUrl: 'https://cdn.discordapp.com/avatars/465613580096765973/bb548f99066f2ffaa463439b78e29712.webp?size=80'});
+  users.set("762765642830315530", {id: 762765642830315530, name: 'FatRatWithAHat', profileUrl: 'https://cdn.discordapp.com/avatars/762765642830315530/d97c52aa52dd654cb5019f9b72048094.webp?size=80'});
+  users.set("457710227240779790", {id: 457710227240779790, name: 'Cloudyy', profileUrl: 'https://cdn.discordapp.com/avatars/457710227240779790/4375a48ba3b6302e454620dc2b133000.webp?size=80'});
+  users.set("494249333986689035", {id: 494249333986689035, name: 'Countwinston', profileUrl: 'https://cdn.discordapp.com/avatars/494249333986689035/0d02459acd8fc96d8a7950a3d5fa0cde.webp?size=80'});
+  users.set("11234", {id: 11234, name: 'BOT Carbon', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=80'});
+  users.set("12234", {id: 11235, name: 'BOT Nitrogen', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=80'});
+  users.set("11", {id: 11, name: 'nogel', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=80'});
+  users.set("12", {id: 12, name: 'adritempo', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=80'});
+  users.set("13", {id: 13, name: 'Onii-chan', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=80'});
+  users.set("14", {id: 14, name: 'ParidAlt', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=80'});
+  users.set("15", {id: 15, name: 'ChilledPaper', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=80'});
+  users.set("16", {id: 16, name: 'MasterColbat', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=80'});
   const userId = "465613580096765973";
+  const user = users.get(userId);
+
+  const communities = [];
+  communities.push({id: 1, name: 'The Nitrogen App', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=32'});
+  communities.push({id: 2, name: 'Augie\'s Igloo', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=32'});
+  communities.push({id: 3, name: 'Stic', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=32'});
+  communities.push({id: 4, name: 'Amazing Gaming', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=32'});
+  const selectedCommunity = 1;
+  const community = communities.find(c => c.id === selectedCommunity);
+
+  const channels = [];
+  channels.push({id: "1234", name: 'General', type: 'text', topic: 'General chat for the Nitrogen App', lastMessageId: '1234', lastMessage: 'This is the last message', lastMessageTimestamp: '2021-05-01T00:00:00.000Z', lastMessageAuthor: '465613580096765973'});
+  channels.push({id: "1235", name: 'Bot Commands', type: 'text', topic: 'Commands for the Nitrogen App', lastMessageId: '1235', lastMessage: 'This is the last message', lastMessageTimestamp: '2021-05-01T00:00:00.000Z', lastMessageAuthor: '465613580096765973'});
+  channels.push({id: "1236", name: 'Media', type: 'text', topic: 'Media', lastMessageId: '1236', lastMessage: 'This is the last message', lastMessageTimestamp: '2021-05-01T00:00:00.000Z', lastMessageAuthor: '465613580096765973'});
+  channels.push({id: "1237", name: 'Off Topic', type: 'text', topic: 'Voice chat', lastMessageId: '1237', lastMessage: 'This is the last message', lastMessageTimestamp: '2021-05-01T00:00:00.000Z', lastMessageAuthor: '465613580096765973'});
+  channels.push({id: "1238", name: 'Voice Chat', type: 'voice', topic: 'Voice chat', lastMessageId: '1238', lastMessage: 'This is the last message', lastMessageTimestamp: '2021-05-01T00:00:00.000Z', lastMessageAuthor: '465613580096765973'});
+  const currentChannel = "1234";
+
+  const userStarredChannelIds = ["1236", "1238"];
+  const channelName = channels.find(c => c.id === currentChannel).name;
+  const isStarred = userStarredChannelIds.includes(currentChannel);
+  const userStarredChannels = channels.filter(channel => userStarredChannelIds.includes(channel.id));
+  const topic = channels.find(c => c.id === currentChannel).topic;
+  const userOtherChannels = channels.filter(channel => !userStarredChannelIds.includes(channel.id));
+
+  function Channel({channel, isCurrentChannel}) {
+    const name = channel.name;
+    const type = channel.type;
+    return(
+      <button className="group w-full h-14 flex rounded-r-lg overflow-hidden mb-1">
+        <div className={`duration-100 w-0.5 h-full ${isCurrentChannel ? 'bg-primary-1' : 'bg-none group-hover:bg-primary-1'} flex-shrink-0`} />
+        <div className={`duration-100 flex-grow ${isCurrentChannel ? 'bg-primary-2' : 'bg-none group-hover:bg-primary-2'} px-4 flex items-center gap-2`}>
+          <div className="w-10 h-10 bg-dark rounded-full flex items-center justify-center">
+            { type === 'text' ?
+            <RiHashtag className={`duration-200 text-2xl ${isCurrentChannel ? 'text-primary-1' : 'text-sub2 group-hover:text-sub3'}`} />
+            :
+            <RiVolumeUpLine className={`duration-200 text-2xl ${isCurrentChannel ? 'text-primary-1' : 'text-sub2 group-hover:text-sub3'}`} />
+            }
+          </div>
+          <h1 className={`duration-100 text-sm ${isCurrentChannel ? 'text-white' : 'text-sub3 group-hover:text-white'}`}>{name}</h1>
+          <button className="ml-auto group w-8 aspect-square hover:bg-primary-2 items-center justify-center rounded-full hidden group-hover:flex">
+            <RiSettings3Line className="text-2xl text-sub2 hover:text-primary-1 hover:rotate-90 duration-200 ease-out" />
+          </button>
+        </div>
+      </button>
+    );
+  }
 
   useState(() => {
     const messages = [];
@@ -61,33 +104,32 @@ export default function Dashboard({ Component, pageProps }) {
           image: content.image,
         },
         author: author,
-        username: author.username,
         date: date,
       }
       messages.push(messageData);
     }
 
-    // createMessage('text', { text: 'Hey!' }, 465613580096765973, new Date())
-    // createMessage('text', { text: 'What\'s up?' }, 342013001479749643, new Date())
-    // createMessage('text', { text: 'I was thinking about a super cool idea for a chat app called Nitrogen!' }, 465613580096765973, new Date())
-    // createMessage('text', { text: 'I have a few ideas on how it might work.' }, 465613580096765973, new Date())
-    // createMessage('text', { text: 'Huh.' }, 342013001479749643, new Date())
-    // createMessage('text', { text: 'That does sound pretty cool. Can you send me a link to some concept work?' }, 342013001479749643, new Date())
-    // createMessage('text', { text: 'Okay!' }, 465613580096765973, new Date())
-    // createMessage('text', { text: 'I\'ll add you to the project on Figma.' }, 465613580096765973, new Date())
-    // createMessage('text', { text: 'Sounds good to me!' }, 342013001479749643, new Date())
-    // createMessage('text', { text: 'Awesome.' }, 465613580096765973, new Date())
-    // createMessage('text', { text: 'I\m working on a sketch right now with Next js.' }, 465613580096765973, new Date())
-    // createMessage('text', { text: 'Sick. Here\'s a moderately long message again so that we can make sure that messages that are super long work how they\'re supposed to. I\'m actually pretty sure that it breaks when the message is too long.' }, 342013001479749643, new Date())
-    // createMessage('text', { text: 'Good idea.' }, 465613580096765973, new Date())
-    // createMessage('text', { text: 'Sick. Here\'s a moderately long message again so that we can make sure that messages that are super long work how they\'re supposed to. I\'m actually pretty sure that it breaks when the message is too long.' }, 465613580096765973, new Date())
-    // createMessage('text', { text: 'Hey!' }, 465613580096765973, new Date())
-    // createMessage('text', { text: 'What\'s up?' }, 762765642830315530, new Date())
-    // createMessage('text', { text: 'I was thinking about a super cool idea for a chat app called Nitrogen!' }, 465613580096765973, new Date())
-    // createMessage('text', { text: 'I have a few ideas on how it might work.' }, 465613580096765973, new Date())
-    // createMessage('text', { text: 'Huh.' }, 762765642830315530, new Date())
-    // createMessage('text', { text: 'That does sound pretty cool.' }, 762765642830315530, new Date())
-    // createMessage('text', { text: 'Okay!' }, 465613580096765973, new Date())
+    createMessage('text', { text: 'Hey!' }, "465613580096765973", new Date())
+    createMessage('text', { text: 'What\'s up?' }, "342013001479749643", new Date())
+    createMessage('text', { text: 'I was thinking about a super cool idea for a chat app called Nitrogen!' }, "465613580096765973", new Date())
+    createMessage('text', { text: 'I have a few ideas on how it might work.' }, "465613580096765973", new Date())
+    createMessage('text', { text: 'Huh.' }, "342013001479749643", new Date())
+    createMessage('text', { text: 'That does sound pretty cool. Can you send me a link to some concept work?' }, "342013001479749643", new Date())
+    createMessage('text', { text: 'Okay!' }, "465613580096765973", new Date())
+    createMessage('text', { text: 'I\'ll add you to the project on Figma.' }, "465613580096765973", new Date())
+    createMessage('text', { text: 'Sounds good to me!' }, "342013001479749643", new Date())
+    createMessage('text', { text: 'Awesome.' }, "465613580096765973", new Date())
+    createMessage('text', { text: 'I\m working on a sketch right now with Next js.' }, "465613580096765973", new Date())
+    createMessage('text', { text: 'Sick. Here\'s a moderately long message again so that we can make sure that messages that are super long work how they\'re supposed to. I\'m actually pretty sure that it breaks when the message is too long.' }, "342013001479749643", new Date())
+    createMessage('text', { text: 'Good idea.' }, "465613580096765973", new Date())
+    createMessage('text', { text: 'Sick. Here\'s a moderately long message again so that we can make sure that messages that are super long work how they\'re supposed to. I\'m actually pretty sure that it breaks when the message is too long.' }, "465613580096765973", new Date())
+    createMessage('text', { text: 'Hey!' }, "465613580096765973", new Date())
+    createMessage('text', { text: 'What\'s up?' }, "762765642830315530", new Date())
+    createMessage('text', { text: 'I was thinking about a super cool idea for a chat app called Nitrogen!' }, "465613580096765973", new Date())
+    createMessage('text', { text: 'I have a few ideas on how it might work.' }, "465613580096765973", new Date())
+    createMessage('text', { text: 'Huh.' }, "762765642830315530", new Date())
+    createMessage('text', { text: 'That does sound pretty cool.' }, "762765642830315530", new Date())
+    createMessage('text', { text: 'Okay!' }, "465613580096765973", new Date())
     setSampleChat(messages);
   }, []);
 
@@ -218,19 +260,84 @@ export default function Dashboard({ Component, pageProps }) {
     );
   }
 
+  function CommunityList({community, isSelected}) {
+    return(
+      <button className={`duration-200 ${isSelected? 'bg-primary-1' : 'hover:bg-primary-1'} w-14 h-14 rounded-full p-0.5`}>
+        <div className="w-full h-full rounded-full border-mid border-2" style={{backgroundImage: `url(${community.profileUrl})`, backgroundSize: '100% 100%'}} />
+      </button>
+    );
+  }
+
+  const atHome = false;
+
   return (
     <div className="w-screen h-screen flex overflow-hidden">
       <div className="relative bg-dark h-full w-full overflow-hidden">
         <div className="h-full w-full overflow-hidden backdrop-blur-3xl flex">
-          <div className="w-24 h-full border-r border-r-void bg-mid flex-shrink-0">
-          
+          <div className="w-24 h-full border-r border-r-void bg-mid flex-shrink-0 flex flex-col">
+            <div className="flex-grow flex flex-col gap-3 overflow-y-scroll side-scrollbar items-center pl-2 pt-8 overflow-x-hidden">
+            <button className={`duration-200 ${atHome? 'bg-primary-1' : 'hover:bg-primary-1'} group w-14 h-14 rounded-full p-0.5`}>
+              <div className="w-full h-full rounded-full bg-black border-mid border-2 flex items-center justify-center">
+                <RiHome5Line className={`${atHome? 'text-primary-1' : 'text-sub3 group-hover:text-white'} text-3xl duration-200`} />
+              </div>
+            </button>
+              {communities.map((community, index) => (
+                <CommunityList key={index} community={community} isSelected={community.id === selectedCommunity} />
+              ))}
+            </div>
+            <div className="flex-shrink-0 w-full flex flex-col items-center pb-8 gap-2">
+              <button className="relative h-14 aspect-square rounded-full overflow-hidden" style={{backgroundImage: `url(${user.profileUrl})`, backgroundSize: '100% 100%'}} />
+            </div>
           </div>
-          <div className="w-72 h-full border-r border-r-void bg-mid flex-shrink-0">
-
+          <div className="w-72 h-full border-r border-r-void bg-mid flex-shrink-0 flex flex-col"> {/* HYDRATION ERROR */}
+            <div className="h-20 w-full flex-shrink-0 bg-mid flex items-center px-4 gap-2">
+              <div className="w-8 aspect-square rounded-full" style={{backgroundImage: `url(${community.profileUrl})`, backgroundSize: '100% 100%'}} />
+              <h1 className="text-white text-sm font-medium">{community.name}</h1>
+              <button className="ml-auto group w-8 aspect-square hover:bg-primary-2 flex items-center justify-center rounded-full">
+                <RiSettings3Line className="text-2xl text-sub2 group-hover:text-primary-1 group-hover:rotate-90 duration-200 ease-out" />
+              </button>
+            </div>
+            <div className="px-4 flex-shrink-0">
+              <div className="w-full bg-black rounded-lg flex gap-2 px-3 items-center">
+                <input className="flex-grow bg-black placeholder-sub2 text-sm my-3 w-0 outline-none text-white" placeholder="Search...">
+                </input>
+                <button className="w-8 h-8 flex-shrink-0 hover:bg-primary-2 flex items-center justify-center rounded-full">
+                  <RiSearchLine className="text-2xl text-sub2 group-hover:text-primary-1" />
+                </button>
+              </div>
+            </div>
+            <div className="flex-grow pt-6 pb-5 overflow-y-scroll bar side-scrollbar select-none">
+              <p className="font-black text-xs text-sub2 pb-4 pl-4">STARRED</p>
+              {userStarredChannels.map((channel) => {
+                const selected = channel.id === currentChannel;
+                return <Channel key={channel.id} channel={channel} isCurrentChannel={selected} />
+              })}
+              <p className="font-black text-xs text-sub2 pb-4 pl-4 pt-5">COMMUNITY CHANNELS</p>
+              {userOtherChannels.map((channel) => {
+                const selected = channel.id === currentChannel;
+                return <Channel key={channel.id} channel={channel} isCurrentChannel={selected} />
+              })}
+            </div>
           </div>
           <div className="flex-grow h-full flex flex-col">
-            <div className="h-16 w-full flex-shrink-0 border-b border-b-void bg-mid">
-
+            <div className="select-none h-20 w-full flex-shrink-0 border-b border-b-void bg-mid px-4 flex items-center justify-between">
+              <div>
+                <div>
+                  <div className="flex gap-2">
+                    <h1 className="text-white font-medium">{channelName}</h1>
+                    {isStarred ?
+                      <button className="text-2xl text-gold">
+                        <RiStarSFill />
+                      </button>
+                      :
+                      <button className="text-2xl text-gold">
+                        <RiStarSLine />
+                      </button>
+                    }
+                  </div>
+                  <p className="text-sm font-medium whitespace-nowrap text-sub3">{topic}</p>
+                </div>
+              </div>
             </div>
             <div className="flex-grow w-full relative overflow-hidden">
               <div className="grow-0 chat-scrollbar h-full flex flex-col pl-2 py-4 text-white font-sans bg-dark overflow-y-scroll overflow-x-hidden" ref={chatBox} onScroll={manageScroll}>
@@ -240,10 +347,10 @@ export default function Dashboard({ Component, pageProps }) {
                 const lastMessage = index === 0;
                 const prevMessage = index > 0 ? sampleChat[index - 1] : null;
                 const authorId = message.author;
-                const username = users.get(authorId).name;
+                const username = users.get(authorId)?.name || 'Deleted User';
                 // get time HH:MM AM/PM
                 const time = message.date.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
-                const avatarURL = users.get(authorId).profileUrl;
+                const avatarURL = users.get(authorId)?.profileUrl;
                 // if the time difference since the last message is more than 10 minutes
                 const timeDifference = prevMessage ? message.date.getTime() - prevMessage.date.getTime() : 0;
                 const newSection = timeDifference > 600000; // 10 minutes in milliseconds
@@ -334,10 +441,10 @@ export default function Dashboard({ Component, pageProps }) {
               <div ref={messageContainer} className="bottom-4 w-full min-h-[2.75rem] h-auto bg-black rounded-lg text-white flex overflow-hidden gap-4 px-4">
                 <div className="h-[2.75rem] flex-shrink-0 flex items-center group-hover">
                   <button className="w-8 aspect-square overflow-hidden rounded-md group flex items-center justify-center" onClick={(e) => setEmojiPicker(true)}>
-                    <RiEmotionLine className="flex-shrink-0 text-2xl text-sub2 hover:text-primary-1 hover:scale-125 duration-200 ease-out"></RiEmotionLine>
+                    <RiEmotionLine theme="dark" className="flex-shrink-0 text-2xl text-sub2 hover:text-primary-1 hover:scale-125 duration-200 ease-out"></RiEmotionLine>
                   </button>
                 </div>
-                <div className="h-full flex flex-grow py-3">    
+                <div className="h-full flex flex-grow py-3">
                   <textarea style={{height: '20px'}} className="msg-scrollbar bg-black flex font-medium w-full outline-none text-sm placeholder-sub2 resize-none" placeholder="Write a message..." onKeyDown={manageKeyPress} onChange={(e) => manageMessageBox()} ref={messageBox}></textarea>
                 </div>
                 <div className="flex-shrink-0 flex gap-4">
@@ -350,45 +457,45 @@ export default function Dashboard({ Component, pageProps }) {
               </div>
             </div>
           </div>
-          <div className="w-72 h-full border-l border-r-void bg-mid flex-shrink-0 flex flex-col py-6 px-4 pr-2 select-none gap-2 overflow-y-scroll side-scrollbar">
+          <div className="w-72 h-full border-l border-r-void bg-mid flex-shrink-0 flex flex-col py-6 px-4 pr-2 select-none gap-2 overflow-y-auto side-scrollbar">
             <div className="w-full flex items-center flex-shrink-0">
-                <p className="font-black text-xs text-sub3 pb-2">THIS COMMUNITY</p>
+              <p className="font-black text-xs text-sub2 pb-2">THIS COMMUNITY</p>
             </div>
             <div className="bg-darker rounded-lg w-full p-4 flex flex-col gap-2 flex-shrink-0">
-              <div className="font-black text-xs text-sub">ABOUT THIS COMMUNITY</div>
+              <div className="font-black text-xs text-sub3">ABOUT THIS COMMUNITY</div>
               <div className="text-sub3 text-sm w-full">This is an awesome community made on Nitrogen. Placeholder text.</div>
-              <div className="font-black text-xs text-sub pt-2">COMMUNITY CREATED</div>
+              <div className="font-black text-xs text-sub3 pt-3">COMMUNITY CREATED ON</div>
               <div className="text-sub3 text-sm w-full">September 12, 2022</div>
-              <div className="font-black text-xs text-sub pt-2">COMMUNITY STATS</div>
+              <div className="font-black text-xs text-sub3 pt-3">COMMUNITY STATS</div>
               <div className="text-sub3 text-sm w-full">13 Members</div>
-              <div className="text-sub3 text-sm w-full">8 Chats</div>
+              <div className="text-sub3 text-sm w-full">5 Channels</div>
               <div className="text-sub3 text-sm w-full">7 Online members</div>
             </div>
             <div className="bg-darker rounded-lg w-full p-4 flex flex-col gap-2 flex-shrink-0">
-              <div className="font-black text-xs text-sub">YOU JOINED THIS COMMUNITY ON</div>
+              <div className="font-black text-xs text-sub3">COMMUNITY MEMBER SINCE</div>
               <div className="text-sub3 text-sm w-full">October 5, 2022</div>
             </div>
             <div className="w-full flex items-center flex-shrink-0">
-                <p className="font-black text-xs text-sub3 pt-4 pb-2">COMMMUNITY MEMBERS</p>
+                <p className="font-black text-xs text-sub2 pt-4 pb-2">COMMUNITY MEMBERS</p>
             </div>
             <div className="bg-darker rounded-lg text-sub3 w-full p-4 flex flex-col gap-2 flex-shrink-0">
-            <div className="font-black text-xs text-sub flex">OWNER <div className="ml-auto font-black">1</div></div>
+            <div className="font-black text-xs text-sub3 flex">OWNER <div className="ml-auto font-black">2</div></div>
+              <UserList id="342013001479749643" />
               <UserList id="465613580096765973" />
             </div>
             <div className="bg-darker rounded-lg w-full p-4 flex flex-col gap-2 flex-shrink-0">
-              <div className="font-black text-xs text-sub flex">MEMBERS <div className="ml-auto font-black">4</div></div>
-              <UserList id="342013001479749643" />
+              <div className="font-black text-xs text-sub3 flex">MEMBER <div className="ml-auto font-black">3</div></div>
               <UserList id="457710227240779790" />
               <UserList id="494249333986689035" />
               <UserList id="762765642830315530" />
             </div>
             <div className="bg-darker rounded-lg w-full p-4 flex flex-col gap-2 flex-shrink-0">
-              <div className="font-black text-xs text-sub flex">BOTS <div className="ml-auto font-black">2</div></div>
+              <div className="font-black text-xs text-sub3 flex">BOT <div className="ml-auto font-black">2</div></div>
               <UserList id="11234" />
               <UserList id="12234" />
             </div>
             <div className="bg-darker rounded-lg w-full p-4 flex flex-col gap-2 flex-shrink-0">
-              <div className="font-black text-xs text-sub flex">OFFLINE <div className="ml-auto font-black">6</div></div>
+              <div className="font-black text-xs text-sub3 flex">OFFLINE <div className="ml-auto font-black">6</div></div>
               <UserList id="11" offline />
               <UserList id="12" offline />
               <UserList id="13" offline />
