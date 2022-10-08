@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect, componentDidMount } from "react"
-import { RiEmotionLine, RiSettings3Line, RiSendPlane2Line, RiSearchLine, RiChat4Line, RiChatVoiceLine, RiStarSLine, RiStarSFill, RiHashtag, RiVolumeUpLine, RiHome5Line } from "react-icons/ri"
+import { RiEmotionLine, RiSettings3Line, RiSendPlane2Line, RiSearchLine, RiChat4Line, RiChatVoiceLine, RiStarSLine, RiStarSFill, RiHashtag, RiVolumeUpLine, RiHome5Line, RiGroupLine } from "react-icons/ri"
+import { AiOutlinePlus } from "react-icons/ai"
 import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
 
@@ -63,6 +64,7 @@ export default function Dashboard({ Component, pageProps }) {
   channels.push({id: "1237", name: 'Off Topic', type: 'text', topic: 'Voice chat', lastMessageId: '1237', lastMessage: 'This is the last message', lastMessageTimestamp: '2021-05-01T00:00:00.000Z', lastMessageAuthor: '465613580096765973'});
   channels.push({id: "1238", name: 'Voice Chat', type: 'voice', topic: 'Voice chat', lastMessageId: '1238', lastMessage: 'This is the last message', lastMessageTimestamp: '2021-05-01T00:00:00.000Z', lastMessageAuthor: '465613580096765973'});
   const currentChannel = "1234";
+  const channel = channels.find(c => c.id === currentChannel);
 
   const userStarredChannelIds = ["1236", "1238"];
   const channelName = channels.find(c => c.id === currentChannel).name;
@@ -74,15 +76,16 @@ export default function Dashboard({ Component, pageProps }) {
   function Channel({channel, isCurrentChannel}) {
     const name = channel.name;
     const type = channel.type;
+    const newMessage = Math.random() > 0.7 && type === 'text';
     return(
       <button className="group w-full h-14 flex rounded-r-lg overflow-hidden mb-1">
-        <div className={`duration-100 w-0.5 h-full ${isCurrentChannel ? 'bg-primary-1' : 'bg-none group-hover:bg-primary-1'} flex-shrink-0`} />
-        <div className={`duration-100 flex-grow ${isCurrentChannel ? 'bg-primary-2' : 'bg-none group-hover:bg-primary-2'} px-4 flex items-center gap-2`}>
+        <div className={`duration-100 w-0.5 h-full ${isCurrentChannel ? 'bg-primary-1' : newMessage ? 'bg-white group-hover:bg-primary-1' : 'bg-none group-hover:bg-primary-1'} flex-shrink-0`} />
+        <div className={`duration-100 flex-grow ${isCurrentChannel ? 'bg-primary-2' : 'bg-none group-hover:bg-primary-2'} h-full px-4 flex items-center gap-2`}>
           <div className="w-10 h-10 bg-dark rounded-full flex items-center justify-center">
             { type === 'text' ?
-            <RiHashtag className={`duration-200 text-2xl ${isCurrentChannel ? 'text-primary-1' : 'text-sub2 group-hover:text-sub3'}`} />
+            <RiHashtag className={`duration-200 text-2xl ${isCurrentChannel ? 'text-primary-1' : newMessage ? 'text-white' :'text-sub2 group-hover:text-sub3'}`} />
             :
-            <RiVolumeUpLine className={`duration-200 text-2xl ${isCurrentChannel ? 'text-primary-1' : 'text-sub2 group-hover:text-sub3'}`} />
+            <RiVolumeUpLine className={`duration-200 text-2xl ${isCurrentChannel ? 'text-primary-1' : newMessage ? 'text-white' : 'text-sub2 group-hover:text-sub3'}`} />
             }
           </div>
           <h1 className={`duration-100 text-sm ${isCurrentChannel ? 'text-white' : 'text-sub3 group-hover:text-white'}`}>{name}</h1>
@@ -276,14 +279,19 @@ export default function Dashboard({ Component, pageProps }) {
         <div className="h-full w-full overflow-hidden backdrop-blur-3xl flex">
           <div className="w-24 h-full border-r border-r-void bg-mid flex-shrink-0 flex flex-col">
             <div className="flex-grow flex flex-col gap-3 overflow-y-scroll side-scrollbar items-center pl-2 pt-8 overflow-x-hidden">
-            <button className={`duration-200 ${atHome? 'bg-primary-1' : 'hover:bg-primary-1'} group w-14 h-14 rounded-full p-0.5`}>
-              <div className="w-full h-full rounded-full bg-black border-mid border-2 flex items-center justify-center">
-                <RiHome5Line className={`${atHome? 'text-primary-1' : 'text-sub3 group-hover:text-white'} text-3xl duration-200`} />
-              </div>
-            </button>
+              <button className={`duration-200 ${atHome? 'bg-primary-1' : 'hover:bg-primary-1'} group w-14 h-14 rounded-full p-0.5`}>
+                <div className="w-full h-full rounded-full bg-black border-mid border-2 flex items-center justify-center">
+                  <RiHome5Line className={`${atHome? 'text-primary-1' : 'text-sub3 group-hover:text-white'} text-3xl duration-200`} />
+                </div>
+              </button>
               {communities.map((community, index) => (
                 <CommunityList key={index} community={community} isSelected={community.id === selectedCommunity} />
               ))}
+              <button className={`duration-200 hover:bg-primary-1 group w-14 h-14 rounded-full p-0.5`}>
+                <div className="w-full h-full rounded-full bg-primary-2 border-mid border-2 flex items-center justify-center">
+                  <AiOutlinePlus className={`text-primary-1 text-2xl duration-200`} />
+                </div>
+              </button>
             </div>
             <div className="flex-shrink-0 w-full flex flex-col items-center pb-8 gap-2">
               <button className="relative h-14 aspect-square rounded-full overflow-hidden" style={{backgroundImage: `url(${user.profileUrl})`, backgroundSize: '100% 100%'}} />
@@ -321,7 +329,14 @@ export default function Dashboard({ Component, pageProps }) {
           </div>
           <div className="flex-grow h-full flex flex-col">
             <div className="select-none h-20 w-full flex-shrink-0 border-b border-b-void bg-mid px-4 flex items-center justify-between">
-              <div>
+              <div className="flex gap-2">
+                <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center">
+                  { channel.type === 'text' ?
+                  <RiHashtag className={`text-3xl text-sub3`} />
+                  :
+                  <RiVolumeUpLine className={`text-3xl text-sub3`} />
+                  }
+                </div>
                 <div>
                   <div className="flex gap-2">
                     <h1 className="text-white font-medium">{channelName}</h1>
@@ -335,9 +350,12 @@ export default function Dashboard({ Component, pageProps }) {
                       </button>
                     }
                   </div>
-                  <p className="text-sm font-medium whitespace-nowrap text-sub3">{topic}</p>
+                  <p className="text-sm whitespace-nowrap text-sub3">{topic}</p>
                 </div>
               </div>
+              <button className="w-12 h-12 items-center flex group justify-center rounded-full">
+                <RiGroupLine className="text-2xl text-white" />
+              </button>
             </div>
             <div className="flex-grow w-full relative overflow-hidden">
               <div className="grow-0 chat-scrollbar h-full flex flex-col pl-2 py-4 text-white font-sans bg-dark overflow-y-scroll overflow-x-hidden" ref={chatBox} onScroll={manageScroll}>

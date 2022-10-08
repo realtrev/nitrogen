@@ -40,7 +40,7 @@ a {
 
 
 /* make a border gradient that fades from opacity 0 to gray */
-.bg-gradient {
+/* .bg-gradient {
   padding: 1px;
   background: linear-gradient(
     45deg,
@@ -65,7 +65,7 @@ a {
     #FFFFFF00 0%,
     #78777d55 100%
   );
-}
+} */
 
 /* scrollbar hidden */
 .bar-hidden::-webkit-scrollbar {
