@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect, componentDidMount } from "react"
-import { RiEmotionLine, RiSettings3Line, RiSendPlane2Line, RiSearchLine, RiChat4Line, RiChatVoiceLine, RiStarSLine, RiStarSFill, RiHashtag, RiVolumeUpLine, RiHome5Line, RiGroupLine } from "react-icons/ri"
+import { RiEmotionLine, RiSettings3Line, RiSendPlane2Line, RiSearchLine, RiAtLine, RiHashtag, RiVolumeUpLine, RiHome5Line, RiGroupLine } from "react-icons/ri"
 import { AiOutlinePlus } from "react-icons/ai"
 import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
@@ -8,6 +8,7 @@ import { useRouter } from 'next/router'
 export default function Dashboard({ Component, pageProps }) {
 
   const router = useRouter();
+  console.log(router);
   const chatName = 'The Nitrogen App';
 
   const messageBox = useRef(null);
@@ -56,44 +57,31 @@ export default function Dashboard({ Component, pageProps }) {
   communities.push({id: 2, name: 'Augie\'s Igloo', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=32'});
   communities.push({id: 3, name: 'Stic', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=32'});
   communities.push({id: 4, name: 'Amazing Gaming', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=32'});
-  const selectedCommunity = 1;
+  const selectedCommunity = 0;
   const community = communities.find(c => c.id === selectedCommunity);
 
-  const channels = [];
-  channels.push({id: "1234", name: 'General', type: 'text', topic: 'General chat for the Nitrogen App', lastMessageId: '1234', lastMessage: 'This is the last message', lastMessageTimestamp: '2021-05-01T00:00:00.000Z', lastMessageAuthor: '465613580096765973'});
-  channels.push({id: "1235", name: 'Bot Commands', type: 'text', topic: 'Commands for the Nitrogen App', lastMessageId: '1235', lastMessage: 'This is the last message', lastMessageTimestamp: '2021-05-01T00:00:00.000Z', lastMessageAuthor: '465613580096765973'});
-  channels.push({id: "1236", name: 'Media', type: 'text', topic: 'Media', lastMessageId: '1236', lastMessage: 'This is the last message', lastMessageTimestamp: '2021-05-01T00:00:00.000Z', lastMessageAuthor: '465613580096765973'});
-  channels.push({id: "1237", name: 'Off Topic', type: 'text', topic: 'Voice chat', lastMessageId: '1237', lastMessage: 'This is the last message', lastMessageTimestamp: '2021-05-01T00:00:00.000Z', lastMessageAuthor: '465613580096765973'});
-  channels.push({id: "1238", name: 'Voice Chat', type: 'voice', topic: 'Voice chat', lastMessageId: '1238', lastMessage: 'This is the last message', lastMessageTimestamp: '2021-05-01T00:00:00.000Z', lastMessageAuthor: '465613580096765973'});
-  const currentChannel = "1234";
-  const channel = channels.find(c => c.id === currentChannel);
+  const dms = [];
+  dms.push({id: "342013001479749643", type: 'dms'});
+  dms.push({id: "762765642830315530", type: 'dms'});
+  dms.push({id: "494249333986689035", type: 'dms'});
+  dms.push({id: "457710227240779790", type: 'dms'});
+  dms.push({id: "11", type: 'dms'});
+  const currentDM = "342013001479749643";
+  const channel = dms.find(c => c.id === currentDM);
+  const channelUser = users.get(channel.id);
 
-  const userStarredChannelIds = ["1236", "1238"];
-  const channelName = channels.find(c => c.id === currentChannel).name;
-  const isStarred = userStarredChannelIds.includes(currentChannel);
-  const userStarredChannels = channels.filter(channel => userStarredChannelIds.includes(channel.id));
-  const topic = channels.find(c => c.id === currentChannel).topic;
-  const userOtherChannels = channels.filter(channel => !userStarredChannelIds.includes(channel.id));
-
-  function Channel({channel, isCurrentChannel}) {
-    const name = channel.name;
-    const type = channel.type;
+  function DmChannel({channel, isCurrentChannel}) {
+    const user = users.get(channel.id);
+    const name = user.name;
+    const type = 'text';
     const newMessage = Math.random() > 0.7 && type === 'text';
     return(
       <button className="group w-full h-14 flex rounded-r-lg overflow-hidden mb-1">
         <div className={`duration-100 w-0.5 h-full ${isCurrentChannel ? 'bg-primary-1' : newMessage ? 'bg-white group-hover:bg-primary-1' : 'bg-none group-hover:bg-primary-1'} flex-shrink-0`} />
         <div className={`duration-100 flex-grow ${isCurrentChannel ? 'bg-primary-2' : 'bg-none group-hover:bg-primary-2'} h-full px-4 flex items-center gap-2`}>
-          <div className="w-10 h-10 bg-dark rounded-full flex items-center justify-center">
-            { type === 'text' ?
-            <RiHashtag className={`duration-200 text-2xl ${isCurrentChannel ? 'text-primary-1' : newMessage ? 'text-white' :'text-sub2 group-hover:text-sub3'}`} />
-            :
-            <RiVolumeUpLine className={`duration-200 text-2xl ${isCurrentChannel ? 'text-primary-1' : newMessage ? 'text-white' : 'text-sub2 group-hover:text-sub3'}`} />
-            }
+          <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{backgroundImage: `url(${user.profileUrl})`, backgroundSize: '100% 100%'}}>
           </div>
           <h1 className={`duration-100 text-sm ${isCurrentChannel ? 'text-white' : 'text-sub3 group-hover:text-white'}`}>{name}</h1>
-          <button className="ml-auto group w-8 aspect-square hover:bg-primary-2 items-center justify-center rounded-full hidden group-hover:flex">
-            <RiSettings3Line className="text-2xl text-sub2 hover:text-primary-1 hover:rotate-90 duration-200 ease-out" />
-          </button>
         </div>
       </button>
     );
@@ -273,7 +261,7 @@ export default function Dashboard({ Component, pageProps }) {
     );
   }
 
-  const atHome = false;
+  const atHome = true;
 
   return (
     <div className="w-screen h-screen flex overflow-hidden">
@@ -281,7 +269,7 @@ export default function Dashboard({ Component, pageProps }) {
         <div className="h-full w-full overflow-hidden backdrop-blur-3xl flex">
           <div className="w-24 h-full border-r border-r-void bg-mid flex-shrink-0 flex flex-col">
             <div className="flex-grow flex flex-col gap-3 overflow-y-scroll side-scrollbar items-center pl-2 pt-8 overflow-x-hidden">
-              <button className={`duration-200 ${atHome? 'bg-primary-1' : 'hover:bg-primary-1'} group w-14 h-14 rounded-full p-0.5`} onClick={(e) => router.replace('/messages/direct')}>
+              <button className={`duration-200 ${atHome? 'bg-primary-1' : 'hover:bg-primary-1'} group w-14 h-14 rounded-full p-0.5`}>
                 <div className="w-full h-full rounded-full bg-black border-mid border-2 flex items-center justify-center">
                   <RiHome5Line className={`${atHome? 'text-primary-1' : 'text-sub3 group-hover:text-white'} text-3xl duration-200`} />
                 </div>
@@ -300,32 +288,20 @@ export default function Dashboard({ Component, pageProps }) {
             </div>
           </div>
           <div className="w-72 h-full border-r border-r-void bg-mid flex-shrink-0 flex flex-col"> {/* HYDRATION ERROR */}
-            <div className="h-20 w-full flex-shrink-0 bg-mid flex items-center px-4 gap-2">
-              <div className="w-8 aspect-square rounded-full" style={{backgroundImage: `url(${community.profileUrl})`, backgroundSize: '100% 100%'}} />
-              <h1 className="text-white text-sm font-medium">{community.name}</h1>
-              <button className="ml-auto group w-8 aspect-square hover:bg-primary-2 flex items-center justify-center rounded-full">
-                <RiSettings3Line className="text-2xl text-sub2 group-hover:text-primary-1 group-hover:rotate-90 duration-200 ease-out" />
-              </button>
-            </div>
-            <div className="px-4 flex-shrink-0">
+            <div className="px-4 flex-shrink-0 flex h-20 items-center">
               <div className="w-full bg-black rounded-lg flex gap-2 px-3 items-center">
-                <input className="flex-grow bg-black placeholder-sub2 text-sm my-3 w-0 outline-none text-white" placeholder="Search...">
+                <input className="flex-grow bg-black placeholder-sub2 text-sm my-3 w-0 outline-none text-white" placeholder="Search DMs...">
                 </input>
                 <button className="w-8 h-8 flex-shrink-0 hover:bg-primary-2 flex items-center justify-center rounded-full">
                   <RiSearchLine className="text-2xl text-sub2 group-hover:text-primary-1" />
                 </button>
               </div>
             </div>
-            <div className="flex-grow pt-6 pb-5 overflow-y-scroll bar side-scrollbar select-none">
-              <p className="font-black text-xs text-sub2 pb-4 pl-4">STARRED</p>
-              {userStarredChannels.map((channel) => {
-                const selected = channel.id === currentChannel;
-                return <Channel key={channel.id} channel={channel} isCurrentChannel={selected} />
-              })}
-              <p className="font-black text-xs text-sub2 pb-4 pl-4 pt-5">COMMUNITY CHANNELS</p>
-              {userOtherChannels.map((channel) => {
-                const selected = channel.id === currentChannel;
-                return <Channel key={channel.id} channel={channel} isCurrentChannel={selected} />
+            <div className="flex-grow pt-1 pb-5 overflow-y-scroll bar side-scrollbar select-none">
+              <p className="font-black text-xs text-sub2 pb-4 pl-4">DIRECT MESSAGES</p>
+              {dms.map((channel) => {
+                const selected = channel.id === currentDM;
+                return <DmChannel key={channel.id} channel={channel} isCurrentChannel={selected} />
               })}
             </div>
           </div>
@@ -333,31 +309,12 @@ export default function Dashboard({ Component, pageProps }) {
             <div className="select-none h-20 w-full flex-shrink-0 border-b border-b-void bg-mid px-4 flex items-center justify-between">
               <div className="flex gap-2">
                 <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center">
-                  { channel.type === 'text' ?
-                  <RiHashtag className={`text-3xl text-sub3`} />
-                  :
-                  <RiVolumeUpLine className={`text-3xl text-sub3`} />
-                  }
+                  <RiAtLine className={`text-3xl text-sub3`} />
                 </div>
-                <div>
-                  <div className="flex gap-2">
-                    <h1 className="text-white font-medium">{channelName}</h1>
-                    {isStarred ?
-                      <button className="text-2xl text-gold">
-                        <RiStarSFill />
-                      </button>
-                      :
-                      <button className="text-2xl text-gold">
-                        <RiStarSLine />
-                      </button>
-                    }
-                  </div>
-                  <p className="text-sm whitespace-nowrap text-sub3">{topic}</p>
+                <div className="my-auto">
+                  <h1 className="text-white font-medium">{channelUser.name}</h1>
                 </div>
               </div>
-              <button className="w-12 h-12 items-center flex group justify-center rounded-full">
-                <RiGroupLine className="text-2xl text-white" />
-              </button>
             </div>
             <div className="flex-grow w-full relative overflow-hidden">
               <div className="grow-0 chat-scrollbar h-full flex flex-col pl-2 py-4 text-white font-sans bg-dark overflow-y-scroll overflow-x-hidden" ref={chatBox} onScroll={manageScroll}>
@@ -382,7 +339,7 @@ export default function Dashboard({ Component, pageProps }) {
                 if (authorId === userId) {
                   if(!prevMessage || prevMessage.author !== userId || newSection) {
                     return (
-                      <div className="flex justify-end pt-5 w-[calc(100vw-43rem)] overflow-hidden gap-2 pr-2 flex-shrink-0" key={index}>
+                      <div className="flex justify-end pt-5 w-[calc(100vw-25rem)] overflow-hidden gap-2 pr-2 flex-shrink-0" key={index}>
                         <div className="msg-gradient rounded-xl rounded-tr-none max-w-[75%] flex flex-col">
                           <div className="w-full flex-grow rounded-xl rounded-tr-none bg-primary-2 py-3 px-4">
                             <div className="flex w-full justify-between items-center gap-4">
@@ -397,7 +354,7 @@ export default function Dashboard({ Component, pageProps }) {
                     )
                   } else {
                     return (
-                      <div className="flex justify-end w-[calc(100vw-43rem)] items-center pt-1 flex-shrink-0" key={index}>
+                      <div className="flex justify-end w-[calc(100vw-25rem)] items-center pt-1 flex-shrink-0" key={index}>
                         <div className="message msg-gradient relative rounded-xl max-w-[66%] flex flex-col">
                           <div className="w-full flex-grow rounded-xl bg-primary-2 py-3 px-4">
                             <p className={`text-white ${makeBig ? 'text-3xl' : 'text-sm'} break-words whitespace-pre-wrap`} dangerouslySetInnerHTML={{ __html: urlify(message.content.text) }}></p>
@@ -412,7 +369,7 @@ export default function Dashboard({ Component, pageProps }) {
                 } else {
                   if(!prevMessage || prevMessage.author !== authorId) {
                     return (
-                      <div className="flex justify-start w-[calc(100vw-44rem)] pt-5 gap-2 pl-2 flex-shrink-0" key={index}>
+                      <div className="flex justify-start w-[calc(100vw-25rem)] pt-5 gap-2 pl-2 flex-shrink-0" key={index}>
                         <div className="h-10 aspect-square rounded-full overflow-hidden" style={{backgroundImage: `url(${avatarURL})`, backgroundSize: '100% 100%'}} />
                         <div className="msg-gradient-gray relative rounded-xl rounded-tl-none max-w-[66%] flex flex-col">
                           <div className="w-full flex-grow rounded-xl rounded-tl-none bg-message py-3 px-4">
@@ -427,7 +384,7 @@ export default function Dashboard({ Component, pageProps }) {
                     )
                   } else {
                     return (
-                      <div className="flex justify-end items-center w-[calc(100vw-44rem)] pt-1 flex-row-reverse flex-shrink-0" key={index}>
+                      <div className="flex justify-end items-center w-[calc(100vw-25rem)] pt-1 flex-row-reverse flex-shrink-0" key={index}>
                         <div className="message msg-gradient-gray relative rounded-xl max-w-[66%] flex flex-col">
                           <div className="w-full flex-grow rounded-xl bg-message py-3 px-4">
                             <p className={`text-white ${makeBig ? 'text-2xl' : 'text-sm'} break-words whitespace-pre-wrap`}>{message.content.text}</p>
@@ -475,53 +432,6 @@ export default function Dashboard({ Component, pageProps }) {
                 </div>
                 </div>
               </div>
-            </div>
-          </div>
-          <div className="w-72 h-full border-l border-r-void bg-mid flex-shrink-0 flex flex-col py-6 px-4 pr-2 select-none gap-2 overflow-y-auto side-scrollbar">
-            <div className="w-full flex items-center flex-shrink-0">
-              <p className="font-black text-xs text-sub2 pb-2">THIS COMMUNITY</p>
-            </div>
-            <div className="bg-darker rounded-lg w-full p-4 flex flex-col gap-2 flex-shrink-0">
-              <div className="font-black text-xs text-sub3">ABOUT THIS COMMUNITY</div>
-              <div className="text-sub3 text-sm w-full">This is an awesome community made on Nitrogen. Placeholder text.</div>
-              <div className="font-black text-xs text-sub3 pt-3">COMMUNITY CREATED ON</div>
-              <div className="text-sub3 text-sm w-full">September 12, 2022</div>
-              <div className="font-black text-xs text-sub3 pt-3">COMMUNITY STATS</div>
-              <div className="text-sub3 text-sm w-full">13 Members</div>
-              <div className="text-sub3 text-sm w-full">5 Channels</div>
-              <div className="text-sub3 text-sm w-full">7 Online members</div>
-            </div>
-            <div className="bg-darker rounded-lg w-full p-4 flex flex-col gap-2 flex-shrink-0">
-              <div className="font-black text-xs text-sub3">COMMUNITY MEMBER SINCE</div>
-              <div className="text-sub3 text-sm w-full">October 5, 2022</div>
-            </div>
-            <div className="w-full flex items-center flex-shrink-0">
-                <p className="font-black text-xs text-sub2 pt-4 pb-2">COMMUNITY MEMBERS</p>
-            </div>
-            <div className="bg-darker rounded-lg text-sub3 w-full p-4 flex flex-col gap-2 flex-shrink-0">
-            <div className="font-black text-xs text-sub3 flex">OWNER <div className="ml-auto font-black">2</div></div>
-              <UserList id="342013001479749643" />
-              <UserList id="465613580096765973" />
-            </div>
-            <div className="bg-darker rounded-lg w-full p-4 flex flex-col gap-2 flex-shrink-0">
-              <div className="font-black text-xs text-sub3 flex">MEMBER <div className="ml-auto font-black">3</div></div>
-              <UserList id="457710227240779790" />
-              <UserList id="494249333986689035" />
-              <UserList id="762765642830315530" />
-            </div>
-            <div className="bg-darker rounded-lg w-full p-4 flex flex-col gap-2 flex-shrink-0">
-              <div className="font-black text-xs text-sub3 flex">BOT <div className="ml-auto font-black">2</div></div>
-              <UserList id="11234" />
-              <UserList id="12234" />
-            </div>
-            <div className="bg-darker rounded-lg w-full p-4 flex flex-col gap-2 flex-shrink-0">
-              <div className="font-black text-xs text-sub3 flex">OFFLINE <div className="ml-auto font-black">6</div></div>
-              <UserList id="11" offline />
-              <UserList id="12" offline />
-              <UserList id="13" offline />
-              <UserList id="14" offline />
-              <UserList id="15" offline />
-              <UserList id="16" offline />
             </div>
           </div>
         </div>
