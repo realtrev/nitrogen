@@ -8,7 +8,7 @@ import { useRouter } from 'next/router'
 export default function Dashboard({ Component, pageProps }) {
 
   const router = useRouter();
-  console.log(router);
+  const [loading, setLoading] = useState(true);
   const chatName = 'The Nitrogen App';
 
   const messageBox = useRef(null);
@@ -263,6 +263,13 @@ export default function Dashboard({ Component, pageProps }) {
 
   const atHome = true;
 
+  if (loading) {
+    return (
+      <div className="flex w-screen h-screen items-center justify-center select-none bg-mid">
+        <h1 className="text-2xl font-bold text-red animate-bounce">Loading...</h1>
+      </div>
+    );
+  }
   return (
     <div className="w-screen h-screen flex overflow-hidden">
       <div className="relative bg-dark h-full w-full overflow-hidden">
