@@ -4,12 +4,13 @@ import { AiOutlinePlus } from "react-icons/ai"
 import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
 import { useRouter } from 'next/router'
+import CommunityBar from "../../src/components/CommunityBar"
+import axios from "axios"
 
 export default function Dashboard({ Component, pageProps }) {
 
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
-  const chatName = 'The Nitrogen App';
+  const [loading, setLoading] = useState(false);
 
   const messageBox = useRef(null);
   const chatBox = useRef(null);
@@ -253,16 +254,6 @@ export default function Dashboard({ Component, pageProps }) {
     );
   }
 
-  function CommunityList({community, isSelected}) {
-    return(
-      <button className={`duration-200 ${isSelected? 'bg-primary-1' : 'hover:bg-primary-1'} w-14 h-14 rounded-full p-0.5`} onClick={(e) => router.replace('/channels')}>
-        <div className="w-full h-full rounded-full border-mid border-2" style={{backgroundImage: `url(${community.profileUrl})`, backgroundSize: '100% 100%'}} />
-      </button>
-    );
-  }
-
-  const atHome = true;
-
   if (loading) {
     return (
       <div className="flex w-screen h-screen items-center justify-center select-none bg-mid">
@@ -274,26 +265,7 @@ export default function Dashboard({ Component, pageProps }) {
     <div className="w-screen h-screen flex overflow-hidden">
       <div className="relative bg-dark h-full w-full overflow-hidden">
         <div className="h-full w-full overflow-hidden backdrop-blur-3xl flex">
-          <div className="w-24 h-full border-r border-r-void bg-mid flex-shrink-0 flex flex-col">
-            <div className="flex-grow flex flex-col gap-3 overflow-y-scroll side-scrollbar items-center pl-2 pt-8 overflow-x-hidden">
-              <button className={`duration-200 ${atHome? 'bg-primary-1' : 'hover:bg-primary-1'} group w-14 h-14 rounded-full p-0.5`}>
-                <div className="w-full h-full rounded-full bg-black border-mid border-2 flex items-center justify-center">
-                  <RiHome5Line className={`${atHome? 'text-primary-1' : 'text-sub3 group-hover:text-white'} text-3xl duration-200`} />
-                </div>
-              </button>
-              {communities.map((community, index) => (
-                <CommunityList key={index} community={community} isSelected={community.id === selectedCommunity} />
-              ))}
-              <button className={`duration-200 hover:bg-primary-1 group w-14 h-14 rounded-full p-0.5`}>
-                <div className="w-full h-full rounded-full bg-primary-2 border-mid border-2 flex items-center justify-center">
-                  <AiOutlinePlus className={`text-primary-1 text-2xl duration-200`} />
-                </div>
-              </button>
-            </div>
-            <div className="flex-shrink-0 w-full flex flex-col items-center pb-8 gap-2">
-              <button className="relative h-14 aspect-square rounded-full overflow-hidden" style={{backgroundImage: `url(${user.profileUrl})`, backgroundSize: '100% 100%'}} />
-            </div>
-          </div>
+          <CommunityBar atHome={true} />
           <div className="w-72 h-full border-r border-r-void bg-mid flex-shrink-0 flex flex-col"> {/* HYDRATION ERROR */}
             <div className="px-4 flex-shrink-0 flex h-20 items-center">
               <div className="w-full bg-black rounded-lg flex gap-2 px-3 items-center">

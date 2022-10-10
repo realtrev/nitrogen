@@ -4,11 +4,32 @@ import { AiOutlinePlus } from "react-icons/ai"
 import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
 import { useRouter } from 'next/router'
+import CommunityBar from "../../src/components/CommunityBar"
+import axios from "axios"
+import MemberBar from "../../src/components/MemberBar"
 
 export default function Dashboard({ Component, pageProps }) {
-
   const router = useRouter();
+
   const chatName = 'The Nitrogen App';
+
+  const [community, setCommunity] = useState(null);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    // fetch data from api
+    const { communityId } = router.query;
+    console.log(communityId);
+    axios.get(`/api/communities/${communityId}`).then((res) => {
+      setCommunity(res.data);
+      console.log(res.data);
+    }).catch((err) => {
+      router.replace('/messages/direct');
+    });
+    axios.get('/api/user').then((res) => {
+      setUser(res.data);
+    });
+  }, []);
 
   const messageBox = useRef(null);
   const chatBox = useRef(null);
@@ -34,30 +55,20 @@ export default function Dashboard({ Component, pageProps }) {
   const isOnlyEmojis = str => !removeEmoji(str).length;
   const lengthNoSpaces = str => str.replace(/\s/g, '').length;
 
-  const users = new Map();
-  users.set("342013001479749643", {id: 342013001479749643, name: 'AugieDog08', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=80'});
-  users.set("465613580096765973", {id: 465613580096765973, name: 'Paridax', profileUrl: 'https://cdn.discordapp.com/avatars/465613580096765973/bb548f99066f2ffaa463439b78e29712.webp?size=80'});
-  users.set("762765642830315530", {id: 762765642830315530, name: 'FatRatWithAHat', profileUrl: 'https://cdn.discordapp.com/avatars/762765642830315530/d97c52aa52dd654cb5019f9b72048094.webp?size=80'});
-  users.set("457710227240779790", {id: 457710227240779790, name: 'Cloudyy', profileUrl: 'https://cdn.discordapp.com/avatars/457710227240779790/4375a48ba3b6302e454620dc2b133000.webp?size=80'});
-  users.set("494249333986689035", {id: 494249333986689035, name: 'Countwinston', profileUrl: 'https://cdn.discordapp.com/avatars/494249333986689035/0d02459acd8fc96d8a7950a3d5fa0cde.webp?size=80'});
-  users.set("11234", {id: 11234, name: 'BOT Carbon', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=80'});
-  users.set("12234", {id: 11235, name: 'BOT Nitrogen', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=80'});
-  users.set("11", {id: 11, name: 'nogel', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=80'});
-  users.set("12", {id: 12, name: 'adritempo', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=80'});
-  users.set("13", {id: 13, name: 'Onii-chan', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=80'});
-  users.set("14", {id: 14, name: 'ParidAlt', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=80'});
-  users.set("15", {id: 15, name: 'ChilledPaper', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=80'});
-  users.set("16", {id: 16, name: 'MasterColbat', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=80'});
-  const userId = "465613580096765973";
-  const user = users.get(userId);
-
-  const communities = [];
-  communities.push({id: 1, name: 'The Nitrogen App', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=32'});
-  communities.push({id: 2, name: 'Augie\'s Igloo', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=32'});
-  communities.push({id: 3, name: 'Stic', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=32'});
-  communities.push({id: 4, name: 'Amazing Gaming', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=32'});
-  const selectedCommunity = 1;
-  const community = communities.find(c => c.id === selectedCommunity);
+  // const users = new Map();
+  // users.set("342013001479749643", {id: 342013001479749643, name: 'AugieDog08', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=80'});
+  // users.set("465613580096765973", {id: 465613580096765973, name: 'Paridax', profileUrl: 'https://cdn.discordapp.com/avatars/465613580096765973/bb548f99066f2ffaa463439b78e29712.webp?size=80'});
+  // users.set("762765642830315530", {id: 762765642830315530, name: 'FatRatWithAHat', profileUrl: 'https://cdn.discordapp.com/avatars/762765642830315530/d97c52aa52dd654cb5019f9b72048094.webp?size=80'});
+  // users.set("457710227240779790", {id: 457710227240779790, name: 'Cloudyy', profileUrl: 'https://cdn.discordapp.com/avatars/457710227240779790/4375a48ba3b6302e454620dc2b133000.webp?size=80'});
+  // users.set("494249333986689035", {id: 494249333986689035, name: 'Countwinston', profileUrl: 'https://cdn.discordapp.com/avatars/494249333986689035/0d02459acd8fc96d8a7950a3d5fa0cde.webp?size=80'});
+  // users.set("11234", {id: 11234, name: 'BOT Carbon', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=80'});
+  // users.set("12234", {id: 11235, name: 'BOT Nitrogen', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=80'});
+  // users.set("11", {id: 11, name: 'nogel', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=80'});
+  // users.set("12", {id: 12, name: 'adritempo', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=80'});
+  // users.set("13", {id: 13, name: 'Onii-chan', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=80'});
+  // users.set("14", {id: 14, name: 'ParidAlt', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=80'});
+  // users.set("15", {id: 15, name: 'ChilledPaper', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=80'});
+  // users.set("16", {id: 16, name: 'MasterColbat', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=80'});
 
   const channels = [];
   channels.push({id: "1234", name: 'General', type: 'text', topic: 'General chat for the Nitrogen App', lastMessageId: '1234', lastMessage: 'This is the last message', lastMessageTimestamp: '2021-05-01T00:00:00.000Z', lastMessageAuthor: '465613580096765973'});
@@ -138,14 +149,6 @@ export default function Dashboard({ Component, pageProps }) {
     setSampleChat(messages);
   }, []);
 
-  function updateRelativeTimes() {
-    // schedule to run as soon as the next minute starts
-    const now = new Date();
-    const nextMinute = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes() + 1, 0, 0);
-    const timeout = nextMinute.getTime() - now.getTime();
-    setTimeout(updateRelativeTimes, timeout);
-  }
-
   function urlify(text) {
     var urlRegex = /(<\S+:\/\/\S+>|https?:\/\/\S+.\S+)/g;
     return text.replace(urlRegex, function(url) {
@@ -166,7 +169,7 @@ export default function Dashboard({ Component, pageProps }) {
     console.log(message);
     const messageData = {
       type: 'text',
-      author: userId,
+      author: null,
       content: {
         text: message,
         image: undefined,
@@ -188,7 +191,6 @@ export default function Dashboard({ Component, pageProps }) {
   }
 
   function manageMessageBox() {
-
     setMessage(messageBox.current.value.trim());
     if (!messageBox.current.value) {
       messageBox.current.style.height = '20px';
@@ -249,56 +251,34 @@ export default function Dashboard({ Component, pageProps }) {
   }
 
   const UserList = ({id, offline = false}) => {
-    const user = users.get(id);
+    const user = null;
     if (!user) {
       return(
-      <div className={`${offline ? 'text-high' : 'text-sub3'} text-sm`}>
-        {username}
+      <div className={`${offline ? 'brightness-50' : ''} text-sub3 text-sm`}>
+        {id}
       </div>
       )
     }
     return(
       <div className={`${offline ? 'brightness-50' : ''} text-sub3 text-sm flex items-center gap-2`}>
-         <div className="relative h-6 aspect-square rounded-full overflow-hidden" style={{backgroundImage: `url(${user.profileUrl})`, backgroundSize: '100% 100%'}} />
+        <div className="relative h-6 aspect-square rounded-full overflow-hidden" style={{backgroundImage: `url(${user.profileUrl})`, backgroundSize: '100% 100%'}} />
         {user.name}
       </div>
     );
   }
 
-  function CommunityList({community, isSelected}) {
-    return(
-      <button className={`duration-200 ${isSelected? 'bg-primary-1' : 'hover:bg-primary-1'} w-14 h-14 rounded-full p-0.5`} onClick={(e) => router.replace('/channels')}>
-        <div className="w-full h-full rounded-full border-mid border-2" style={{backgroundImage: `url(${community.profileUrl})`, backgroundSize: '100% 100%'}} />
-      </button>
+  if (!community || !user) {
+    return (
+      <div className="flex w-screen h-screen items-center justify-center select-none bg-mid">
+        <h1 className="text-2xl font-bold text-red animate-bounce">Loading...</h1>
+      </div>
     );
   }
-
-  const atHome = false;
-
   return (
     <div className="w-screen h-screen flex overflow-hidden">
       <div className="relative bg-dark h-full w-full overflow-hidden">
         <div className="h-full w-full overflow-hidden backdrop-blur-3xl flex">
-          <div className="w-24 h-full border-r border-r-void bg-mid flex-shrink-0 flex flex-col">
-            <div className="flex-grow flex flex-col gap-3 overflow-y-scroll side-scrollbar items-center pl-2 pt-8 overflow-x-hidden">
-              <button className={`duration-200 ${atHome? 'bg-primary-1' : 'hover:bg-primary-1'} group w-14 h-14 rounded-full p-0.5`} onClick={(e) => router.replace('/messages/direct')}>
-                <div className="w-full h-full rounded-full bg-black border-mid border-2 flex items-center justify-center">
-                  <RiHome5Line className={`${atHome? 'text-primary-1' : 'text-sub3 group-hover:text-white'} text-3xl duration-200`} />
-                </div>
-              </button>
-              {communities.map((community, index) => (
-                <CommunityList key={index} community={community} isSelected={community.id === selectedCommunity} />
-              ))}
-              <button className={`duration-200 hover:bg-primary-1 group w-14 h-14 rounded-full p-0.5`}>
-                <div className="w-full h-full rounded-full bg-primary-2 border-mid border-2 flex items-center justify-center">
-                  <AiOutlinePlus className={`text-primary-1 text-2xl duration-200`} />
-                </div>
-              </button>
-            </div>
-            <div className="flex-shrink-0 w-full flex flex-col items-center pb-8 gap-2">
-              <button className="relative h-14 aspect-square rounded-full overflow-hidden" style={{backgroundImage: `url(${user.profileUrl})`, backgroundSize: '100% 100%'}} />
-            </div>
-          </div>
+          <CommunityBar atHome={false} />
           <div className="w-72 h-full border-r border-r-void bg-mid flex-shrink-0 flex flex-col"> {/* HYDRATION ERROR */}
             <div className="h-20 w-full flex-shrink-0 bg-mid flex items-center px-4 gap-2">
               <div className="w-8 aspect-square rounded-full" style={{backgroundImage: `url(${community.profileUrl})`, backgroundSize: '100% 100%'}} />
@@ -367,10 +347,10 @@ export default function Dashboard({ Component, pageProps }) {
                 const lastMessage = index === 0;
                 const prevMessage = index > 0 ? sampleChat[index - 1] : null;
                 const authorId = message.author;
-                const username = users.get(authorId)?.name || 'Deleted User';
+                const username = 'Deleted User';
                 // get time HH:MM AM/PM
                 const time = message.date.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
-                const avatarURL = users.get(authorId)?.profileUrl;
+                const avatarURL = null;
                 // if the time difference since the last message is more than 10 minutes
                 const timeDifference = prevMessage ? message.date.getTime() - prevMessage.date.getTime() : 0;
                 const newSection = timeDifference > 600000; // 10 minutes in milliseconds
@@ -378,9 +358,8 @@ export default function Dashboard({ Component, pageProps }) {
                 const newDay = prevMessage ? message.date.getDate() !== prevMessage.date.getDate() : true;
                 const relativeDay = getRelativeDay(message.date);
                 const makeBig = isOnlyEmojis(message.content.text) && lengthNoSpaces(message.content.text) <=  50;
-                console.log(lengthNoSpaces(message.content.text));
-                if (authorId === userId) {
-                  if(!prevMessage || prevMessage.author !== userId || newSection) {
+                if (authorId === undefined) {
+                  if(!prevMessage || prevMessage.author !== undefined || newSection) {
                     return (
                       <div className="flex justify-end pt-5 w-[calc(100vw-43rem)] overflow-hidden gap-2 pr-2 flex-shrink-0" key={index}>
                         <div className="msg-gradient rounded-xl rounded-tr-none max-w-[75%] flex flex-col">
@@ -477,53 +456,7 @@ export default function Dashboard({ Component, pageProps }) {
               </div>
             </div>
           </div>
-          <div className="w-72 h-full border-l border-r-void bg-mid flex-shrink-0 flex flex-col py-6 px-4 pr-2 select-none gap-2 overflow-y-auto side-scrollbar">
-            <div className="w-full flex items-center flex-shrink-0">
-              <p className="font-black text-xs text-sub2 pb-2">THIS COMMUNITY</p>
-            </div>
-            <div className="bg-darker rounded-lg w-full p-4 flex flex-col gap-2 flex-shrink-0">
-              <div className="font-black text-xs text-sub3">ABOUT THIS COMMUNITY</div>
-              <div className="text-sub3 text-sm w-full">This is an awesome community made on Nitrogen. Placeholder text.</div>
-              <div className="font-black text-xs text-sub3 pt-3">COMMUNITY CREATED ON</div>
-              <div className="text-sub3 text-sm w-full">September 12, 2022</div>
-              <div className="font-black text-xs text-sub3 pt-3">COMMUNITY STATS</div>
-              <div className="text-sub3 text-sm w-full">13 Members</div>
-              <div className="text-sub3 text-sm w-full">5 Channels</div>
-              <div className="text-sub3 text-sm w-full">7 Online members</div>
-            </div>
-            <div className="bg-darker rounded-lg w-full p-4 flex flex-col gap-2 flex-shrink-0">
-              <div className="font-black text-xs text-sub3">COMMUNITY MEMBER SINCE</div>
-              <div className="text-sub3 text-sm w-full">October 5, 2022</div>
-            </div>
-            <div className="w-full flex items-center flex-shrink-0">
-                <p className="font-black text-xs text-sub2 pt-4 pb-2">COMMUNITY MEMBERS</p>
-            </div>
-            <div className="bg-darker rounded-lg text-sub3 w-full p-4 flex flex-col gap-2 flex-shrink-0">
-            <div className="font-black text-xs text-sub3 flex">OWNER <div className="ml-auto font-black">2</div></div>
-              <UserList id="342013001479749643" />
-              <UserList id="465613580096765973" />
-            </div>
-            <div className="bg-darker rounded-lg w-full p-4 flex flex-col gap-2 flex-shrink-0">
-              <div className="font-black text-xs text-sub3 flex">MEMBER <div className="ml-auto font-black">3</div></div>
-              <UserList id="457710227240779790" />
-              <UserList id="494249333986689035" />
-              <UserList id="762765642830315530" />
-            </div>
-            <div className="bg-darker rounded-lg w-full p-4 flex flex-col gap-2 flex-shrink-0">
-              <div className="font-black text-xs text-sub3 flex">BOT <div className="ml-auto font-black">2</div></div>
-              <UserList id="11234" />
-              <UserList id="12234" />
-            </div>
-            <div className="bg-darker rounded-lg w-full p-4 flex flex-col gap-2 flex-shrink-0">
-              <div className="font-black text-xs text-sub3 flex">OFFLINE <div className="ml-auto font-black">6</div></div>
-              <UserList id="11" offline />
-              <UserList id="12" offline />
-              <UserList id="13" offline />
-              <UserList id="14" offline />
-              <UserList id="15" offline />
-              <UserList id="16" offline />
-            </div>
-          </div>
+          <MemberBar user={user} community={community} />
         </div>
       </div>
     </div>

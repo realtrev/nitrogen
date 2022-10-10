@@ -1,7 +1,7 @@
-import { state } from "../../../DEV_API_STATE";
+import { state } from "../../DEV_API_STATE";
 
 export default function handler(req, res) {
-  const directMessageId = `${req.query.id}${req.query.dm}`;
+  const directMessageId = `${state.user}${req.query.dm}`;
   const directMessage = state.directMessages.get(directMessageId);
   const channelMessages = state.messages.get(directMessageId);
   if (directMessage) {
