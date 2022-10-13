@@ -2,29 +2,16 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
-export default function Verify({ Component, pageProps }) {
+export default function Verify({ linkExists, verified, linkExpired }) {
   const router = useRouter();
 
-  const [success, setSuccess] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [success, setSuccess] = useState(verified);
 
   const { vId } = router.query;
 
   useEffect(() => {
     // send a get request to /api/auth/register/[confirmationString]
     console.log(vId);
-    axios.get(`/api/auth/register/confirm/${vId}`).then((res) => {
-      if (res.data?.success) {
-        setSuccess(true);
-      } else {
-        setSuccess(false);
-      }
-      setLoading(false);
-    }).catch((err) => {
-      console.log(err);
-      setSuccess(false);
-      setLoading(false);
-    });
   }, [vId]);
 
   return (
@@ -35,20 +22,15 @@ export default function Verify({ Component, pageProps }) {
       </div>
       <div className="gap-1 pb-8 pt-10 flex flex-col">
         <div className="w-full bg-darker rounded-lg py-20">
-          {loading ?
-            <div className="text-white text-center">
-              <div className="text-2xl font-bold">Loading...</div>
-              <div className="text-sm">Please wait while we verify your account.</div>
-            </div>
-          : success ?
+          {!success ?
           <div className="text-white text-center">
-            <h1 className="text-white font-bold text-center text-2xl w-full">Email address verified!</h1>
-            <p className="text-sub3 text-center mt-2 w-full">You can now log in to your account.</p>
+            <h1 className="text-white font-bold text-center text-2xl w-full">This verification link doesn't work anymore.</h1>
+            <p className="text-sub3 text-center mt-2 w-full">Please try registering again or close this window.</p>
           </div>
           :
           <div className="text-white text-center">
-            <h1 className="text-white font-bold text-center text-2xl w-full">This verification link doesn't work anymore.</h1>
-            <p className="text-sub3 text-center mt-2 w-full">Please try registering again.</p>
+            <h1 className="text-white font-bold text-center text-2xl w-full">Email address verified!</h1>
+            <p className="text-sub3 text-center mt-2 w-full">You can now log in to your account.</p>
           </div>
           }
         </div>
@@ -71,4 +53,28 @@ export default function Verify({ Component, pageProps }) {
     </div>
   </div>
   );
+}
+
+export async function getServerSideProps(context) {
+  const { vId } = context.query;
+  console.log(vId);
+  let linkExists = false;
+  let linkExpired = false;
+  let verified = false;
+  const res = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/accounts/verify/${vId}`);
+
+  if (res.data.success) {
+    verified = true;
+    linkExists = true;
+  } else {
+    linkExpired = true;
+  }
+
+  return {
+    props: {
+      linkExists,
+      linkExpired,
+      verified
+    }
+  }
 }

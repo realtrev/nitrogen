@@ -3,31 +3,36 @@ import { Schema, model, models } from "mongoose";
 // email verification schema
 const EmailVerificationSchema = new Schema({
   email: {
-    type: Schema.Types.String,
+    type: String,
     required: true,
   },
   password: {
-    type: Schema.Types.String,
+    type: String,
     required: true,
   },
   username: {
-    type: Schema.Types.String,
+    type: String,
+    required: true,
+  },
+  name: {
+    type: String,
     required: true,
   },
   confirmationString: {
-    type: Schema.Types.String,
+    type: String,
     required: true,
   },
   createdAt: {
-    type: Schema.Types.Date,
-    default: Date.now,
+    type: Date,
+    default: Date.now(),
+    expires: 60,
   },
   version: {
-    type: Schema.Types.Number,
+    type: Number,
     default: 0,
   },
   verified: {
-    type: Schema.Types.Boolean,
+    type: Boolean,
     default: false,
   },
 });

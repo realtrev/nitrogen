@@ -9,10 +9,14 @@ import "@fontsource/montserrat/800.css";
 // manrope
 // lexend
 // montserrat
+import { SessionProvider } from "next-auth/react";
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, pageProps: {session, ...pageProps} }) {
+
   return(
-   <Component {...pageProps} />
+    <SessionProvider session={session}>
+      <Component {...pageProps} />
+    </SessionProvider>
   );
 }
 

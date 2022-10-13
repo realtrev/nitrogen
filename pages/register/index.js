@@ -1,6 +1,7 @@
 import { RiGoogleFill } from "react-icons/ri";
 import { useRouter } from "next/router";
 import { useRef, useState, useEffect } from "react";
+import { signIn } from "next-auth/react";
 import axios from "axios";
 
 export default function Login({ Component, pageProps }) {
@@ -16,6 +17,7 @@ export default function Login({ Component, pageProps }) {
   const [usernameErrorMessage, setUsernameErrorMessage] = useState("USERNAME");
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("PASSWORD");
   const [waitingForVerification, setWaitingForVerification] = useState(false);
+  const [verificationError, setVerificationError] = useState("");
   const [clear, setClear] = useState(false);
   const emailField = useRef(null);
   const usernameField = useRef(null);
@@ -42,7 +44,7 @@ export default function Login({ Component, pageProps }) {
     }
   });
 
-  function handleLogin(e) {
+  function handleRegister(e) {
     e.preventDefault();
     // emailError();
     // usernameError();
@@ -54,13 +56,17 @@ export default function Login({ Component, pageProps }) {
       password: password,
     };
     // send to /api/auth/register as POST
-    axios.post("/api/auth/register", data).then((res) => {
+    axios.post("/api/accounts/register", data).then((res) => {
       console.log(res.data);
       if (!res) {
         console.log("Connection error");
         return;
       }
       const data = res.data;
+      if (data.verifyEmail) {
+        setWaitingForVerification(true);
+        return;
+      }
       if (!data.validEmail) {
         setEmailErrorMessage(`EMAIL - ${data.emailMessage.toUpperCase()}`);
       } else {
@@ -76,11 +82,11 @@ export default function Login({ Component, pageProps }) {
       } else {
         setUsernameErrorMessage('USERNAME');
       }
-      if (data.verifyEmail) {
-        setWaitingForVerification(true);
-      }
     }).catch((err) => {
       console.log(err);
+      setEmailErrorMessage(`EMAIL -  ${err.message.toUpperCase()}`);
+      setUsernameErrorMessage(`USERNAME -  ${err.message.toUpperCase()}`);
+      setPasswordErrorMessage(`PASSWORD -  ${err.message.toUpperCase()}`);
     });
   }
 
@@ -104,7 +110,7 @@ export default function Login({ Component, pageProps }) {
 
   function handlePasswordKeyPress(e) {
     if (e.key === "Enter") {
-      handleLogin(e);
+      handleRegister(e);
     }
   }
 
@@ -130,6 +136,8 @@ export default function Login({ Component, pageProps }) {
     // username must be at least 3 characters long and only contain letters and numbers and underscores
     const usernameRegex = /^[a-zA-Z0-9_]+$/g;
     const usernameIsValid = usernameRegex.test(e.target.value);
+    // remove the not allowed characters
+    e.target.value = e.target.value.replace(/[^a-zA-Z0-9_]/g, "");
     if (usernameIsValid && e.target.value.length >= 1) {
       setAllowUsername(true);
     } else {
@@ -138,16 +146,49 @@ export default function Login({ Component, pageProps }) {
     setUsername(e.target.value.trim());
   }
 
+  function logInWithGoogle() {
+    signIn("google", {
+      callbackUrl: "https://dev.paridax.xyz/register/google",
+    });
+  }
+
+  function handleLogin() {
+    console.log({
+      email: email,
+      username: username,
+      password: password,
+    })
+    signIn("credentials", {
+      username: username.toLowerCase(),
+      password,
+      redirect: false,
+      callbackUrl: "https://dev.paridax.xyz/app",
+    })
+    .then((res) => {
+      console.log(res);
+      if (res.ok) {
+        router.push("/app");
+      } else if (res.ok === false) {
+        setVerificationError("You have not verified your email yet.");
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+
+    });
+  }
+
   if (waitingForVerification) {
     return (
       <div className="w-screen h-screen bg-gradient-to-tl from-primary-1 to-red flex items-center justify-center select-none">
-      <div className="w-[40rem] h-auto bg-gradient-to-tl from-mid to-message rounded-2xl px-6 shadow-2xl">
+      <div className="w-[32rem] h-auto bg-gradient-to-tl from-mid to-message rounded-2xl px-6 shadow-2xl">
         <div className="pt-10 text-white font-bold text-2xl text-center">
           Create an account
         </div>
         <div className="gap-1 pb-8 pt-10 flex flex-col">
           <div className="w-full bg-darker rounded-lg py-20">
             <h1 className="text-white font-bold animate-pulse text-center text-xl w-full">Check your inbox...</h1>
+            <p className="text-red text-center text-sm w-full font-medium">{verificationError}</p>
           </div>
         </div>
         <div className="flex flex-col gap-1">
@@ -164,7 +205,7 @@ export default function Login({ Component, pageProps }) {
         </div>
 
         <div className="text-2xs text-sub2 py-5">
-          By registering, you agree to Nitrogen's <button onClick={(e) => router.push('/legal/terms')} className="text-2xs text-primary-1 hover:underline">Terms of Service</button> and <button onClick={(e) => router.push('/legal/privacy')} className="text-2xs text-primary-1 hover:underline">Privacy Policy</button>
+          {"By registering, you agree to Nitrogen's "}<button onClick={(e) => router.push('/legal/terms')} className="text-2xs text-primary-1 hover:underline">Terms of Service</button> and <button onClick={(e) => router.push('/legal/privacy')} className="text-2xs text-primary-1 hover:underline">Privacy Policy</button>
         </div>
       </div>
     </div>
@@ -173,7 +214,7 @@ export default function Login({ Component, pageProps }) {
 
   return (
     <div className="w-screen h-screen bg-gradient-to-tl from-primary-1 to-red flex items-center justify-center select-none">
-      <div className="w-[40rem] h-auto bg-gradient-to-tl from-mid to-message rounded-2xl px-6 shadow-2xl">
+      <div className="w-[32rem] h-auto bg-gradient-to-tl from-mid to-message rounded-2xl px-6 shadow-2xl">
         <div className="pt-10 text-white font-bold text-2xl text-center">
           Create an account
         </div>
@@ -186,7 +227,7 @@ export default function Login({ Component, pageProps }) {
           <input ref={passwordField} onKeyDown={handlePasswordKeyPress} onChange={handlePasswordChange} type="password" className="px-4 w-full py-3 rounded-lg bg-black outline-none text-white" />
         </div>
         <div className="flex flex-col gap-1">
-          <button onClick={handleLogin} className="hover:shadow-2xl shadow-primary-1 group duration-200 w-full h-14 bg-primary-2 rounded-lg font-bold text-primary-1 hover:bg-primary-1 hover:text-white disabled:bg-high disabled:text-sub3">
+          <button onClick={handleRegister} className="hover:shadow-2xl shadow-primary-1 group duration-200 w-full h-14 bg-primary-2 rounded-lg font-bold text-primary-1 hover:bg-primary-1 hover:text-white disabled:bg-high disabled:text-sub3">
             {waitingForVerification ? 'I have verified my email' : 'Register'}
           </button>
           <p className="text-xs text-sub3">Already have an account? <button onClick={(e) => router.push('/login')} className="text-xs text-primary-1 hover:underline">Log in</button></p>
@@ -197,13 +238,13 @@ export default function Login({ Component, pageProps }) {
           <div className="border-b border-b-high flex-grow" />
         </div>
         <div>
-          <button className="flex items-center justify-center gap-2 duration-200 w-full h-14 bg-white rounded-lg font-bold text-mid hover:bg-primary-1 hover:text-white disabled:bg-high disabled:text-sub3">
+          <button onClick={logInWithGoogle} className="flex items-center justify-center gap-2 duration-200 w-full h-14 bg-white rounded-lg font-bold text-mid hover:bg-primary-1 hover:text-white disabled:bg-high disabled:text-sub3">
             <RiGoogleFill className="text-2xl" />
             Log in with Google
           </button>
         </div>
         <div className="text-2xs text-sub2 py-5">
-          By registering, you agree to Nitrogen's <button onClick={(e) => router.push('/legal/terms')} className="text-2xs text-primary-1 hover:underline">Terms of Service</button> and <button onClick={(e) => router.push('/legal/privacy')} className="text-2xs text-primary-1 hover:underline">Privacy Policy</button>
+          By registering, you agree to {"Nitrogen's"} <button onClick={(e) => router.push('/legal/terms')} className="text-2xs text-primary-1 hover:underline">Terms of Service</button> and <button onClick={(e) => router.push('/legal/privacy')} className="text-2xs text-primary-1 hover:underline">Privacy Policy</button>
         </div>
       </div>
     </div>

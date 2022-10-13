@@ -23,10 +23,9 @@ function generateUniqueId(seed = null, length = 16, numeric = false) {
     const hash = crypto.createHash('sha256').update(seed).digest('hex');
     return hash.substring(0, length);
   }
-  // hash the seed and return a fixed length numeric string
-  const hash = crypto.createHash('sha256').update(seed).digest('hex');
-  const numericHash = parseInt(hash, 16);
-  return numericHash.toString().substring(2, length + 2);
+  // create a numeric id of a fixed length with random numbers
+  const id = Math.floor(Math.random() * Math.pow(10, length));
+  return id;
 }
 
 export { hashPassword, checkPassword, generateUniqueId };

@@ -1,8 +1,9 @@
-import { connectMongo } from '../../../../src/utils/connectMongo';
-import { hashPassword, generateUniqueId } from '../../../../src/utils/encryption';
-import { Users } from '../../../../src/schemas/UserSchema';
-import { EmailVerification } from '../../../../src/schemas/EmailVerificationSchema';
-import { sendEmail } from '../../../../src/utils/nodemail';
+import { connectMongo } from '../../../src/utils/connectMongo';
+import { hashPassword, generateUniqueId } from '../../../src/utils/encryption';
+import { Users } from '../../../src/schemas/UserSchema';
+import { EmailVerification } from '../../../src/schemas/EmailVerificationSchema';
+import { sendEmail } from '../../../src/utils/nodemail';
+import checkUsername from '../../../src/utils/username';
 
 export default async function handler(req, res) {
   try {
@@ -12,9 +13,9 @@ export default async function handler(req, res) {
     }
 
     const { db } = await connectMongo();
-    const email = req.body.email.trim().toLowerCase();
-    const username = req.body.username.trim().toLowerCase();
-    const password = req.body.password;
+    const email = req.body.email.trim();
+    const username = req.body.username.trim();
+    const password = req.body.password.trim();
 
     const { emailMessage, validEmail } = await checkEmail(email);
     const { usernameMessage, validUsername } = await checkUsername(username);
@@ -28,13 +29,14 @@ export default async function handler(req, res) {
 
       // create a unique identifier for the email verification
       const emailId = generateUniqueId(email, 32);
-      console.log('https://dev.paridax.xyz/verify/' + emailId);
+      console.log('https://dev.paridax.xyz/register/email/' + emailId);
 
       // add to the email verification database
       const emailVerification = await EmailVerification.create({
-        email: email.toLowerCase(),
+        email: email,
         password: hashedPassword,
         username: username.toLowerCase(),
+        name: username,
         confirmationString: emailId,
       });
 
@@ -51,11 +53,11 @@ async function checkEmail(email) {
   const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
   const emailIsValid = emailRegex.test(email);
   if (!emailIsValid) {
-    return {emailMessage: "Please enter a valid email", validEmail: false};
+    return {emailMessage: "Invalid email", validEmail: false};
   }
   // email is too long
-  if (email.length > 40) {
-    return {emailMessage: "Email must be less than 40 characters long", validEmail: false};
+  if (email.length > 80) {
+    return {emailMessage: "Email must be less than 80 characters long", validEmail: false};
   }
   // check if email is already in use
   const emailInUse = await Users.findOne({ email: email.toLowerCase() });
@@ -75,55 +77,22 @@ async function checkEmail(email) {
   return {emailMessage: "This email address is a valid email", validEmail: true};
 }
 
-async function checkUsername(username) {
-  // check if the username is at least 3 characters long
-  if (username.length < 3) {
-    return {usernameMessage: "Username must be at least 3 characters long", validUsername: false};
-  }
-  // only letters numbers and underscores
-  const usernameRegex = /^[a-zA-Z0-9_]+$/g;
-  const usernameIsValid = usernameRegex.test(username);
-  if (!usernameIsValid) {
-    return {usernameMessage: "Username can only contain letters, numbers, and underscores", validUsername: false};
-  }
-  // username is too long
-  if (username.length > 20) {
-    return {usernameMessage: "Username must be less than 20 characters long", validUsername: false};
-  }
-
-  // check if username is already in use
-  const usernameInUse = await Users.findOne({ username: username.toLowerCase() });
-  // this means that no existing user has this username
-  if (usernameInUse) {
-    return {usernameMessage: "This username is unavailable", validUsername: false};
-  }
-  // check if the username is in the temp database
-  const tempInUse = await EmailVerification.findOne({ username: username.toLowerCase() });
-  // this means that nobody is trying to claim this username
-  if (tempInUse) {
-    return {usernameMessage: "This username is unavailable", validUsername: false};
-  }
-
-  // username is valid and not in use
-  return {usernameMessage: "This username is available", validUsername: true};
-}
-
 async function checkPassword(password) {
   // check if the password is at least 8 characters long
   if (password.length < 8) {
-    return {passwordMessage: "Password must be at least 8 characters long", validPassword: false};
+    return {passwordMessage: "Must be at least 8 characters long", validPassword: false};
   }
 
   // check if the password is too long >100
   if (password.length > 100) {
-    return {passwordMessage: "Password must be less than 100 characters long", validPassword: false};
+    return {passwordMessage: "Must be less than 100 characters long", validPassword: false};
   }
 
   // password may not contain spaces
   const passwordRegex = /^[^\s]+$/g;
   const passwordIsValid = passwordRegex.test(password);
   if (!passwordIsValid) {
-    return {passwordMessage: "Password may not contain spaces", validPassword: false};
+    return {passwordMessage: "May not contain spaces", validPassword: false};
   }
 
   // password is valid

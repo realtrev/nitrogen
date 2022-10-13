@@ -1,7 +1,7 @@
-import { connectMongo } from '../../../../../src/utils/connectMongo';
-import { hashPassword, generateUniqueId } from '../../../../../src/utils/encryption';
-import { Users } from '../../../../../src/schemas/UserSchema';
-import { EmailVerification } from '../../../../../src/schemas/EmailVerificationSchema';
+import { connectMongo } from '../../../../src/utils/connectMongo';
+import { hashPassword, generateUniqueId } from '../../../../src/utils/encryption';
+import { Users } from '../../../../src/schemas/UserSchema';
+import { EmailVerification } from '../../../../src/schemas/EmailVerificationSchema';
 
 export default async function handler(req, res) {
   // request is a get request
@@ -24,15 +24,16 @@ export default async function handler(req, res) {
   }
 
   // get the username, email, and password from the email verification
-  const { username, email, password } = emailVerification;
+  const { username, email, password, name } = emailVerification;
 
   // create a new user
+  const userId = generateUniqueId(email, 16, true);
   const user = await Users.create({
-    username: username.toLowerCase(),
-    email: email.toLowerCase(),
-    name: username,
-    password,
-    id: generateUniqueId(email, 16, true),
+    username: username,
+    email: email,
+    name: name,
+    password: password,
+    id: userId,
   });
 
   // delete the email verification
