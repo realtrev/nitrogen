@@ -39,6 +39,10 @@ function Login({ session }) {
     // emailError();
     // usernameError();
     // passwordError();
+    if (!username.length) {
+      usernameField.current.focus();
+      return;
+    }
     console.log("login");
     const data = {
       username: username,

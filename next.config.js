@@ -6,6 +6,9 @@ const nextConfig = {
   images: {
     domains: ['cdn.discordapp.com'],
   },
+  env: {
+    "HCAPTCHA_PUBLIC_SITE_KEY": process.env.HCAPTCHA_PUBLIC_SITE_KEY
+  }
 }
 
 module.exports = nextConfig

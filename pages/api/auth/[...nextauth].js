@@ -2,8 +2,9 @@ import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { Users } from "../../../src/schemas/UserSchema";
-import { checkPassword } from "../../../src/utils/encryption";
+import { checkPassword } from "../../../src/utils/identity";
 import { connectMongo } from "../../../src/utils/connectMongo";
+import { verifyCaptcha } from "../../../src/utils/chaptcha";
 
 export const authOptions = {
   // Configure one or more authentication providers
@@ -13,15 +14,27 @@ export const authOptions = {
       name: "Nitrogen",
       credentials: {
         username: { label: "Username", type: "text", placeholder: "Username" },
-        password: { label: "Password", type: "password" }
+        password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
         // Add logic here to look up the user from the credentials supplied
-        console.log(credentials);
+        const captcha = req.body.captcha;
+        // if the captcha doesnt exist or if it is not valid
+        if (!captcha || await verifyCaptcha(captcha) === false) {
+          return false;
+        }
+
+        // console.log(credentials);
         const { db } = connectMongo();
-        let user = await Users.findOne({ username: credentials.username });
+        let user = await Users.findOne({ username: credentials.username })
+        .catch((err) => {
+          console.log(err.message);
+        });
         if (!user) {
-          user = await Users.findOne({ email: credentials.username });
+          user = await Users.findOne({ email: credentials.username })
+          .catch((err) => {
+            console.log(err.message);
+          });
           if (!user) {
             return false;
           }
@@ -53,7 +66,10 @@ export const authOptions = {
 
       // check if the email exists in the database
       if (email) {
-        const userExists = await Users.findOne({ email: email });
+        const userExists = await Users.findOne({ email: email })
+        .catch((err) => {
+          // console.log(err.message);
+        });
         // console.log(userExists);
         if (!userExists) {
           if (!nitrogen) {
@@ -71,7 +87,7 @@ export const authOptions = {
           token.name = userExists.name;
           token.userCreatedAt = userExists.createdAt;
           token.nitrogen = true;
-          token.userId = userExists.id;
+          token.userId = userExists.userId;
           token.createdAt = userExists.createdAt;
         }
       }

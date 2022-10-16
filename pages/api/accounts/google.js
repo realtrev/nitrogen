@@ -3,7 +3,7 @@ import { Users } from '../../../src/schemas/UserSchema';
 import { authOptions } from '../auth/[...nextauth]';
 import checkUsername from '../../../src/utils/username';
 import { unstable_getServerSession } from "next-auth/next";
-import { generateUniqueId } from '../../../src/utils/encryption';
+import { generateNumericId } from '../../../src/utils/identity';
 
 export default async function handler(req, res) {
   try {
@@ -29,13 +29,13 @@ export default async function handler(req, res) {
       console.log("valid username");
 
       // create a new user
-      const userId = generateUniqueId(email, 16, true);
-      const user = await Users.create({
+      const userId = generateNumericId("USER");
+      await Users.create({
+        _id: userId,
         username: username.toLowerCase(),
         email: email,
         name: username,
         password: "GOOGLE:USER",
-        id: userId,
       });
 
       return res.status(200).send({usernameMessage, validUsername, verified: true});

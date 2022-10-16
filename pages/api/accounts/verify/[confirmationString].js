@@ -1,5 +1,5 @@
 import { connectMongo } from '../../../../src/utils/connectMongo';
-import { hashPassword, generateUniqueId } from '../../../../src/utils/encryption';
+import { hashPassword, generateNumericId } from '../../../../src/utils/identity';
 import { Users } from '../../../../src/schemas/UserSchema';
 import { EmailVerification } from '../../../../src/schemas/EmailVerificationSchema';
 
@@ -13,10 +13,9 @@ export default async function handler(req, res) {
 
   // get the confirmation string from the url
   const { confirmationString } = req.query;
-  console.log(confirmationString);
 
   // find the email verification in the database
-  const emailVerification = await EmailVerification.findOne({ confirmationString });
+  const emailVerification = await EmailVerification.findOne({ _id: confirmationString });
 
   // if the email verification is not found
   if (!emailVerification) {
@@ -27,17 +26,18 @@ export default async function handler(req, res) {
   const { username, email, password, name } = emailVerification;
 
   // create a new user
-  const userId = generateUniqueId(email, 16, true);
-  const user = await Users.create({
+  const userId = generateNumericId("USER");
+  console.log(userId);
+  await Users.create({
+    _id: userId,
     username: username,
     email: email,
     name: name,
     password: password,
-    id: userId,
   });
 
   // delete the email verification
-  await EmailVerification.deleteOne({ confirmationString });
+  await EmailVerification.deleteOne({ _id: confirmationString });
 
   // send the user to the login page
   res.status(200).json({ message: "Email verified", success: true });

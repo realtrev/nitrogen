@@ -2,46 +2,60 @@ import { Schema, model, models } from "mongoose";
 
 // user schema
 const UserSchema = new Schema({
-  id: {
-    type: Schema.Types.String,
-    required: true,
-    unique: true,
+  _id: {
+    type: String
   },
   name: {
-    type: Schema.Types.String,
+    type: String,
     required: true
   },
   username: {
-    type: Schema.Types.String,
+    type: String,
     required: true,
+    unique: true,
+    index: true
   },
   email: {
-    type: Schema.Types.String,
-    required: true
+    type: String,
+    required: true,
+    unique: true,
+    index: true
   },
   password: {
-    type: Schema.Types.String,
+    type: String,
     required: true
   },
+  status: {
+    type: String,
+    default: "offline"
+  },
   createdAt: {
-    type: Schema.Types.Date,
+    type: Date,
     default: Date.now
   },
   friends: {
-    type: Schema.Types.Array,
+    type: Array,
     default: []
   },
   friendRequests: {
-    type: Schema.Types.Array,
+    type: Array,
+    default: []
+  },
+  outgoingFriendRequests: {
+    type: Array,
+    default: []
+  },
+  blockedUsers: {
+    type: Array,
+    default: []
+  },
+  userNotes: {
+    type: Array,
     default: []
   },
   communities: {
-    type: Schema.Types.Array,
+    type: Array,
     default: []
-  },
-  version: {
-    type: Schema.Types.Number,
-    default: 0
   }
 });
 

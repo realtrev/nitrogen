@@ -2,9 +2,14 @@ import { Schema, model, models } from "mongoose";
 
 // email verification schema
 const EmailVerificationSchema = new Schema({
+  _id: {
+    type: String
+  },
   email: {
     type: String,
     required: true,
+    unique: true,
+    index: true
   },
   password: {
     type: String,
@@ -18,18 +23,10 @@ const EmailVerificationSchema = new Schema({
     type: String,
     required: true,
   },
-  confirmationString: {
-    type: String,
-    required: true,
-  },
   createdAt: {
     type: Date,
     default: Date.now(),
-    expires: 60,
-  },
-  version: {
-    type: Number,
-    default: 0,
+    expires: '1m',
   },
   verified: {
     type: Boolean,

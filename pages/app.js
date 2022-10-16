@@ -21,12 +21,21 @@ function Protected({ user }) {
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);
-  console.log(session);
+  // console.log(session);
 
   if (!session) {
     return {
       redirect: {
         destination: "/login",
+        permanent: false,
+      },
+    }
+  }
+
+  if (session.user.registerGoogle) {
+    return {
+      redirect: {
+        destination: "/register/google",
         permanent: false,
       },
     }

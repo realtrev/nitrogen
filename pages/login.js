@@ -1,18 +1,23 @@
 import { RiGoogleFill } from "react-icons/ri";
 import { useRouter } from "next/router";
-import { useSession, getSession, signIn, getCsrfToken, getProviders } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { getSession, signIn, getCsrfToken, getProviders } from "next-auth/react";
+import { useEffect, useState, useRef } from "react";
+import HCaptcha from "@hcaptcha/react-hcaptcha";
 
 function Login({ providers, csrfToken }) {
   const router = useRouter();
 
   const [username, setUsername] = useState("");
-  const [usernameErrorMessage, setUsernameErrorMessage] = useState("USERNAME");
+  const [usernameErrorMessage, setUsernameErrorMessage] = useState("USERNAME OR EMAIL");
   const [allowUsername, setAllowUsername] = useState(false);
   const [password, setPassword] = useState("");
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("PASSWORD");
   const [allowPassword, setAllowPassword] = useState(false);
   const [clear, setClear] = useState(false);
+  const [proveHuman, setProveHuman] = useState(false);
+  const usernameRef = useRef();
+  const passwordRef = useRef();
+  const captchaRef = useRef();
 
   useEffect(() => {
     console.log(providers);
@@ -24,14 +29,11 @@ function Login({ providers, csrfToken }) {
     });
   }
 
-  function logIn() {
-    console.log({
-      username: username,
-      password: password,
-    })
+  function logIn(captchaToken) {
     signIn("credentials", {
       username,
       password,
+      captcha: captchaToken,
       redirect: false,
       callbackUrl: "https://dev.paridax.xyz/app",
     })
@@ -40,11 +42,38 @@ function Login({ providers, csrfToken }) {
       if (res.ok) {
         router.push("/app");
       }
+      if (res.status === 401) {
+        console.log("Invalid credentials");
+        setProveHuman(false);
+        setUsernameErrorMessage("USERNAME OR EMAIL - INVALID LOGIN OR PASSWORD");
+        setPasswordErrorMessage("PASSWORD - INVALID LOGIN OR PASSWORD");
+      }
     })
     .catch((err) => {
       console.log(err);
     });
   }
+
+  function handleSubmit() {
+    if (!username.length) {
+      usernameRef.current.focus();
+      return;
+    }
+    if (!password.length) {
+      passwordRef.current.focus();
+      return;
+    }
+    setProveHuman(true);
+  }
+
+  useEffect(() => {
+    if (usernameRef.current) {
+      usernameRef.current.value = username;
+    }
+    if (passwordRef.current) {
+      passwordRef.current.value = password;
+    }
+  }, [username, password, proveHuman]);
 
   function handleUsernameChange(e) {
     setUsername(e.target.value.trim());
@@ -58,7 +87,7 @@ function Login({ providers, csrfToken }) {
 
   function handleKeyPress(e) {
     if (e.key === "Enter") {
-      logIn();
+      handleSubmit();
     }
   }
 
@@ -72,6 +101,28 @@ function Login({ providers, csrfToken }) {
     }
   }
 
+  if (proveHuman) {
+    return(
+      <div className="w-screen h-screen bg-gradient-to-tl from-primary-1 to-red flex items-center justify-center select-none">
+        <div className="w-[32rem] h-auto bg-gradient-to-tl from-mid to-message rounded-2xl px-6 shadow-2xl flex items-center justify-center pb-10 flex-col">
+        <div className="pt-10 text-white font-bold text-2xl text-center">
+          Welcome back!
+        </div>
+        <div className="pb-6 text-sub3 text-sm text-center w-3/4 mx-auto pt-2">We just want to make sure you're a real person. Complete the challenge below.</div>
+          <HCaptcha
+            id="captcha"
+            size="normal"
+            ref={captchaRef}
+            theme="dark"
+            sitekey={"a3e7bdd3-bfb2-4b7a-9eed-9a7f2ddb8cd7"}
+            onVerify={(token) => logIn(token)}
+            className="select-none w-full"
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-screen h-screen bg-gradient-to-tl from-primary-1 to-red flex items-center justify-center select-none">
         <div className="w-[32rem] h-auto bg-gradient-to-tl from-mid to-message rounded-2xl px-6 shadow-2xl">
@@ -79,16 +130,16 @@ function Login({ providers, csrfToken }) {
             Welcome back!
           </div>
           <div className="gap-1 py-8 flex flex-col">
-            <h1 className="text-xs text-sub3 font-extrabold">USERNAME OR EMAIL</h1>
-            <input onKeyDown={handleKeyPress} onChange={handleUsernameChange} type="email" className="px-4 w-full py-3 rounded-lg bg-black outline-none text-white" />
-            <h1 className="text-xs text-sub3 font-extrabold pt-5">PASSWORD</h1>
-            <input onKeyDown={handleKeyPress} onChange={handlePasswordChange} type="password" className="px-4 w-full py-3 rounded-lg bg-black outline-none text-white" />
+            <h1 className={`text-xs font-extrabold pt-5 ${usernameErrorMessage === 'USERNAME OR EMAIL' ? 'text-sub3' : 'text-red'}`}>{usernameErrorMessage}</h1>
+            <input ref={usernameRef} onKeyDown={handleKeyPress} onChange={handleUsernameChange} type="email" className="px-4 w-full py-3 rounded-lg bg-black outline-none text-white" />
+            <h1 className={`text-xs font-extrabold pt-5 ${passwordErrorMessage === 'PASSWORD' ? 'text-sub3' : 'text-red'}`}>{passwordErrorMessage}</h1>
+            <input ref={passwordRef} onKeyDown={handleKeyPress} onChange={handlePasswordChange} type="password" className="px-4 w-full py-3 rounded-lg bg-black outline-none text-white" />
             <div>
               <button onClick={() => {}} className="text-xs hover:underline text-primary-1">Forgot your password?</button>
             </div>
           </div>
           <div className="flex flex-col gap-1">
-            <button onClick={() => logIn()} className="hover:shadow-2xl shadow-primary-1 group duration-200 w-full h-14 bg-primary-2 rounded-lg font-bold text-primary-1 hover:bg-primary-1 hover:text-white disabled:bg-high disabled:text-sub3">
+            <button onClick={() => handleSubmit()} className="hover:shadow-2xl shadow-primary-1 group duration-200 w-full h-14 bg-primary-2 rounded-lg font-bold text-primary-1 hover:bg-primary-1 hover:text-white disabled:bg-high disabled:text-sub3">
               Log in
             </button>
             <div>
@@ -125,8 +176,7 @@ export async function getServerSideProps(context) {
     }
   }
 
-  const csrf = await getCsrfToken(context)
-  console.log(csrf);
+  const csrf = await getCsrfToken(context);
 
   return {
     props: {
