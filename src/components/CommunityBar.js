@@ -23,7 +23,7 @@ export default function CommunityBar({atHome = false}) {
   function CommunityList({community, isSelected}) {
     return(
       <button className={`duration-200 ${isSelected? 'bg-primary-1' : 'hover:bg-primary-1'} w-14 h-14 rounded-full p-0.5`} onClick={(e) => router.replace(`/channels/${community.id}`)}>
-        <div className="w-full h-full rounded-full border-mid border-2" style={{backgroundImage: `url("/api/communities/${community.id}/avatar")`, backgroundSize: '100% 100%'}} />
+        <div className="w-full h-full rounded-full border-mid border-2" style={{backgroundImage: `url("${community}")`, backgroundSize: '100% 100%'}} />
       </button>
     );
   }

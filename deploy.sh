@@ -1,0 +1,1 @@
+"/usr/local/bin/pm2" restart "nitrogen" && echo "Restarting Service" || cd "/home/ubuntu/coding/nitrogen" && "/usr/local/bin/pm2" start npm --name "quizzable" -- start && echo "Starting Service"

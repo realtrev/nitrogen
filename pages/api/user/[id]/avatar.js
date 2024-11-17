@@ -5,12 +5,12 @@ export default async function handler(req, res) {
   if (user) {
     // get image from url
     const image = await fetch(user.profileUrl);
-    // convert image to buffer
-    const buffer = await image.buffer();
+    console.log(user.profileUrl);
+    
     // set content type
     res.setHeader('Content-Type', 'image/png');
     // send image
-    res.send(buffer);
+    res.send(image);
     return;
   }
   res.status(404).send();

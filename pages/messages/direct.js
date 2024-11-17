@@ -1,35 +1,16 @@
 import { useRef, useState, useEffect, componentDidMount } from "react"
-import { RiEmotionLine, RiSettings3Line, RiSendPlane2Line, RiSearchLine, RiChat4Line, RiChatVoiceLine, RiStarSLine, RiStarSFill, RiHashtag, RiVolumeUpLine, RiHome5Line, RiGroupLine } from "react-icons/ri"
+import { RiEmotionLine, RiSettings3Line, RiSendPlane2Line, RiSearchLine, RiAtLine, RiHashtag, RiVolumeUpLine, RiHome5Line, RiGroupLine } from "react-icons/ri"
 import { AiOutlinePlus } from "react-icons/ai"
 import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
 import { useRouter } from 'next/router'
 import CommunityBar from "../../src/components/CommunityBar"
 import axios from "axios"
-import MemberBar from "../../src/components/MemberBar"
 
 export default function Dashboard({ Component, pageProps }) {
+
   const router = useRouter();
-
-  const chatName = 'The Nitrogen App';
-
-  const [community, setCommunity] = useState(null);
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    // fetch data from api
-    const { communityId } = router.query;
-    console.log(communityId);
-    axios.get(`/api/communities/${communityId}`).then((res) => {
-      setCommunity(res.data);
-      console.log(res.data);
-    }).catch((err) => {
-      router.replace('/messages/direct');
-    });
-    axios.get('/api/user').then((res) => {
-      setUser(res.data);
-    });
-  }, []);
+  const [loading, setLoading] = useState(false);
 
   const messageBox = useRef(null);
   const chatBox = useRef(null);
@@ -55,56 +36,45 @@ export default function Dashboard({ Component, pageProps }) {
   const isOnlyEmojis = str => !removeEmoji(str).length;
   const lengthNoSpaces = str => str.replace(/\s/g, '').length;
 
-  // const users = new Map();
-  // users.set("342013001479749643", {id: 342013001479749643, name: 'AugieDog08', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=80'});
-  // users.set("465613580096765973", {id: 465613580096765973, name: 'Paridax', profileUrl: 'https://cdn.discordapp.com/avatars/465613580096765973/bb548f99066f2ffaa463439b78e29712.webp?size=80'});
-  // users.set("762765642830315530", {id: 762765642830315530, name: 'FatRatWithAHat', profileUrl: 'https://cdn.discordapp.com/avatars/762765642830315530/d97c52aa52dd654cb5019f9b72048094.webp?size=80'});
-  // users.set("457710227240779790", {id: 457710227240779790, name: 'Cloudyy', profileUrl: 'https://cdn.discordapp.com/avatars/457710227240779790/4375a48ba3b6302e454620dc2b133000.webp?size=80'});
-  // users.set("494249333986689035", {id: 494249333986689035, name: 'Countwinston', profileUrl: 'https://cdn.discordapp.com/avatars/494249333986689035/0d02459acd8fc96d8a7950a3d5fa0cde.webp?size=80'});
-  // users.set("11234", {id: 11234, name: 'BOT Carbon', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=80'});
-  // users.set("12234", {id: 11235, name: 'BOT Nitrogen', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=80'});
-  // users.set("11", {id: 11, name: 'nogel', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=80'});
-  // users.set("12", {id: 12, name: 'adritempo', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=80'});
-  // users.set("13", {id: 13, name: 'Onii-chan', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=80'});
-  // users.set("14", {id: 14, name: 'ParidAlt', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=80'});
-  // users.set("15", {id: 15, name: 'ChilledPaper', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=80'});
-  // users.set("16", {id: 16, name: 'MasterColbat', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=80'});
+  const users = new Map();
+  users.set("342013001479749643", {id: 342013001479749643, name: 'AugieDog08', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/032e75cfa9e1a7292fb2cd96cd099e85.webp?size=80'});
+  users.set("465613580096765973", {id: 465613580096765973, name: 'Paridax', profileUrl: 'https://cdn.discordapp.com/avatars/465613580096765973/bb548f99066f2ffaa463439b78e29712.webp?size=80'});
+  users.set("457710227240779790", {id: 457710227240779790, name: 'Maegic Moause', profileUrl: 'https://cdn.discordapp.com/avatars/622201065525215232/5fce28d1b1cb096641a6c164cb5c0874.webp?size=80'});
+  users.set("494249333986689035", {id: 494249333986689035, name: 'Countwinston', profileUrl: 'https://cdn.discordapp.com/avatars/494249333986689035/eab5027f5166300144f53dfde298dfb8.webp?size=80'});
+  users.set("733112790914564126", {id: 733112790914564126, name: 'Romlin', profileUrl: 'https://cdn.discordapp.com/avatars/733112790914564126/4b8679f41d08958aed7dc453630f040a.webp?size=80'});
 
-  const channels = [];
-  channels.push({id: "1234", name: 'General', type: 'text', topic: 'General chat for the Nitrogen App', lastMessageId: '1234', lastMessage: 'This is the last message', lastMessageTimestamp: '2021-05-01T00:00:00.000Z', lastMessageAuthor: '465613580096765973'});
-  channels.push({id: "1235", name: 'Bot Commands', type: 'text', topic: 'Commands for the Nitrogen App', lastMessageId: '1235', lastMessage: 'This is the last message', lastMessageTimestamp: '2021-05-01T00:00:00.000Z', lastMessageAuthor: '465613580096765973'});
-  channels.push({id: "1236", name: 'Media', type: 'text', topic: 'Media', lastMessageId: '1236', lastMessage: 'This is the last message', lastMessageTimestamp: '2021-05-01T00:00:00.000Z', lastMessageAuthor: '465613580096765973'});
-  channels.push({id: "1237", name: 'Off Topic', type: 'text', topic: 'Voice chat', lastMessageId: '1237', lastMessage: 'This is the last message', lastMessageTimestamp: '2021-05-01T00:00:00.000Z', lastMessageAuthor: '465613580096765973'});
-  channels.push({id: "1238", name: 'Voice Chat', type: 'voice', topic: 'Voice chat', lastMessageId: '1238', lastMessage: 'This is the last message', lastMessageTimestamp: '2021-05-01T00:00:00.000Z', lastMessageAuthor: '465613580096765973'});
-  const currentChannel = "1234";
-  const channel = channels.find(c => c.id === currentChannel);
+  const userId = "465613580096765973";
+  const user = users.get(userId);
 
-  const userStarredChannelIds = ["1236", "1238"];
-  const channelName = channels.find(c => c.id === currentChannel).name;
-  const isStarred = userStarredChannelIds.includes(currentChannel);
-  const userStarredChannels = channels.filter(channel => userStarredChannelIds.includes(channel.id));
-  const topic = channels.find(c => c.id === currentChannel).topic;
-  const userOtherChannels = channels.filter(channel => !userStarredChannelIds.includes(channel.id));
+  const communities = [];
+  communities.push({id: 1, name: 'The Nitrogen App', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=32'});
+  communities.push({id: 2, name: 'Augie\'s Igloo', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=32'});
+  communities.push({id: 3, name: 'Stic', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=32'});
+  communities.push({id: 4, name: 'Amazing Gaming', profileUrl: 'https://cdn.discordapp.com/avatars/342013001479749643/da1363e9c00ca067921f1bf44f4d9ded.webp?size=32'});
+  const selectedCommunity = 0;
+  const community = communities.find(c => c.id === selectedCommunity);
 
-  function Channel({channel, isCurrentChannel}) {
-    const name = channel.name;
-    const type = channel.type;
+  const dms = [];
+  dms.push({id: "342013001479749643", type: 'dms'});
+  dms.push({id: "494249333986689035", type: 'dms'});
+  dms.push({id: "457710227240779790", type: 'dms'});
+  dms.push({id: "733112790914564126", type: 'dms'});
+  const currentDM = "342013001479749643";
+  const channel = dms.find(c => c.id === currentDM);
+  const channelUser = users.get(channel.id);
+
+  function DmChannel({channel, isCurrentChannel}) {
+    const user = users.get(channel.id);
+    const name = user.name;
+    const type = 'text';
     const newMessage = Math.random() > 0.7 && type === 'text';
     return(
       <button className="group w-full h-14 flex rounded-r-lg overflow-hidden mb-1">
         <div className={`duration-100 w-0.5 h-full ${isCurrentChannel ? 'bg-primary-1' : newMessage ? 'bg-white group-hover:bg-primary-1' : 'bg-none group-hover:bg-primary-1'} flex-shrink-0`} />
         <div className={`duration-100 flex-grow ${isCurrentChannel ? 'bg-primary-2' : 'bg-none group-hover:bg-primary-2'} h-full px-4 flex items-center gap-2`}>
-          <div className="w-10 h-10 bg-dark rounded-full flex items-center justify-center">
-            { type === 'text' ?
-            <RiHashtag className={`duration-200 text-2xl ${isCurrentChannel ? 'text-primary-1' : newMessage ? 'text-white' :'text-sub2 group-hover:text-sub3'}`} />
-            :
-            <RiVolumeUpLine className={`duration-200 text-2xl ${isCurrentChannel ? 'text-primary-1' : newMessage ? 'text-white' : 'text-sub2 group-hover:text-sub3'}`} />
-            }
+          <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{backgroundImage: `url(${user.profileUrl})`, backgroundSize: '100% 100%'}}>
           </div>
           <h1 className={`duration-100 text-sm ${isCurrentChannel ? 'text-white' : 'text-sub3 group-hover:text-white'}`}>{name}</h1>
-          <button className="ml-auto group w-8 aspect-square hover:bg-primary-2 items-center justify-center rounded-full hidden group-hover:flex">
-            <RiSettings3Line className="text-2xl text-sub2 hover:text-primary-1 hover:rotate-90 duration-200 ease-out" />
-          </button>
         </div>
       </button>
     );
@@ -140,14 +110,22 @@ export default function Dashboard({ Component, pageProps }) {
     createMessage('text', { text: 'Good idea.' }, "465613580096765973", new Date())
     createMessage('text', { text: 'Sick. Here\'s a moderately long message again so that we can make sure that messages that are super long work how they\'re supposed to. I\'m actually pretty sure that it breaks when the message is too long.' }, "465613580096765973", new Date())
     createMessage('text', { text: 'Hey!' }, "465613580096765973", new Date())
-    createMessage('text', { text: 'What\'s up?' }, "762765642830315530", new Date())
+    createMessage('text', { text: 'What\'s up?' }, "494249333986689035", new Date())
     createMessage('text', { text: 'I was thinking about a super cool idea for a chat app called Nitrogen!' }, "465613580096765973", new Date())
     createMessage('text', { text: 'I have a few ideas on how it might work.' }, "465613580096765973", new Date())
-    createMessage('text', { text: 'Huh.' }, "762765642830315530", new Date())
-    createMessage('text', { text: 'That does sound pretty cool.' }, "762765642830315530", new Date())
+    createMessage('text', { text: 'Huh.' }, "494249333986689035", new Date())
+    createMessage('text', { text: 'That does sound pretty cool.' }, "494249333986689035", new Date())
     createMessage('text', { text: 'Okay!' }, "465613580096765973", new Date())
     setSampleChat(messages);
   }, []);
+
+  function updateRelativeTimes() {
+    // schedule to run as soon as the next minute starts
+    const now = new Date();
+    const nextMinute = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes() + 1, 0, 0);
+    const timeout = nextMinute.getTime() - now.getTime();
+    setTimeout(updateRelativeTimes, timeout);
+  }
 
   function urlify(text) {
     var urlRegex = /(<\S+:\/\/\S+>|https?:\/\/\S+.\S+)/g;
@@ -169,7 +147,7 @@ export default function Dashboard({ Component, pageProps }) {
     console.log(message);
     const messageData = {
       type: 'text',
-      author: null,
+      author: userId,
       content: {
         text: message,
         image: undefined,
@@ -191,6 +169,7 @@ export default function Dashboard({ Component, pageProps }) {
   }
 
   function manageMessageBox() {
+
     setMessage(messageBox.current.value.trim());
     if (!messageBox.current.value) {
       messageBox.current.style.height = '20px';
@@ -251,23 +230,23 @@ export default function Dashboard({ Component, pageProps }) {
   }
 
   const UserList = ({id, offline = false}) => {
-    const user = null;
+    const user = users.get(id);
     if (!user) {
       return(
-      <div className={`${offline ? 'brightness-50' : ''} text-sub3 text-sm`}>
-        {id}
+      <div className={`${offline ? 'text-high' : 'text-sub3'} text-sm`}>
+        {username}
       </div>
       )
     }
     return(
       <div className={`${offline ? 'brightness-50' : ''} text-sub3 text-sm flex items-center gap-2`}>
-        <div className="relative h-6 aspect-square rounded-full overflow-hidden" style={{backgroundImage: `url(${user.profileUrl})`, backgroundSize: '100% 100%'}} />
+         <div className="relative h-6 aspect-square rounded-full overflow-hidden" style={{backgroundImage: `url(${user.profileUrl})`, backgroundSize: '100% 100%'}} />
         {user.name}
       </div>
     );
   }
 
-  if (!community || !user) {
+  if (loading) {
     return (
       <div className="flex w-screen h-screen items-center justify-center select-none bg-mid">
         <h1 className="text-2xl font-bold text-red animate-bounce">Loading...</h1>
@@ -278,34 +257,22 @@ export default function Dashboard({ Component, pageProps }) {
     <div className="w-screen h-screen flex overflow-hidden">
       <div className="relative bg-dark h-full w-full overflow-hidden">
         <div className="h-full w-full overflow-hidden backdrop-blur-3xl flex">
-          <CommunityBar atHome={false} />
+          <CommunityBar atHome={true} />
           <div className="w-72 h-full border-r border-r-void bg-mid flex-shrink-0 flex flex-col"> {/* HYDRATION ERROR */}
-            <div className="h-20 w-full flex-shrink-0 bg-mid flex items-center px-4 gap-2">
-              <div className="w-8 aspect-square rounded-full" style={{backgroundImage: `url(${community.profileUrl})`, backgroundSize: '100% 100%'}} />
-              <h1 className="text-white text-sm font-medium">{community.name}</h1>
-              <button className="ml-auto group w-8 aspect-square hover:bg-primary-2 flex items-center justify-center rounded-full">
-                <RiSettings3Line className="text-2xl text-sub2 group-hover:text-primary-1 group-hover:rotate-90 duration-200 ease-out" />
-              </button>
-            </div>
-            <div className="px-4 flex-shrink-0">
+            <div className="px-4 flex-shrink-0 flex h-20 items-center">
               <div className="w-full bg-black rounded-lg flex gap-2 px-3 items-center">
-                <input className="flex-grow bg-black placeholder-sub2 text-sm my-3 w-0 outline-none text-white" placeholder="Search...">
+                <input className="flex-grow bg-black placeholder-sub2 text-sm my-3 w-0 outline-none text-white" placeholder="Search DMs...">
                 </input>
                 <button className="w-8 h-8 flex-shrink-0 hover:bg-primary-2 flex items-center justify-center rounded-full">
                   <RiSearchLine className="text-2xl text-sub2 group-hover:text-primary-1" />
                 </button>
               </div>
             </div>
-            <div className="flex-grow pt-6 pb-5 overflow-y-scroll bar side-scrollbar select-none">
-              <p className="font-black text-xs text-sub2 pb-4 pl-4">STARRED</p>
-              {userStarredChannels.map((channel) => {
-                const selected = channel.id === currentChannel;
-                return <Channel key={channel.id} channel={channel} isCurrentChannel={selected} />
-              })}
-              <p className="font-black text-xs text-sub2 pb-4 pl-4 pt-5">COMMUNITY CHANNELS</p>
-              {userOtherChannels.map((channel) => {
-                const selected = channel.id === currentChannel;
-                return <Channel key={channel.id} channel={channel} isCurrentChannel={selected} />
+            <div className="flex-grow pt-1 pb-5 overflow-y-scroll bar side-scrollbar select-none">
+              <p className="font-black text-xs text-sub2 pb-4 pl-4">DIRECT MESSAGES</p>
+              {dms.map((channel) => {
+                const selected = channel.id === currentDM;
+                return <DmChannel key={channel.id} channel={channel} isCurrentChannel={selected} />
               })}
             </div>
           </div>
@@ -313,31 +280,12 @@ export default function Dashboard({ Component, pageProps }) {
             <div className="select-none h-20 w-full flex-shrink-0 border-b border-b-void bg-mid px-4 flex items-center justify-between">
               <div className="flex gap-2">
                 <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center">
-                  { channel.type === 'text' ?
-                  <RiHashtag className={`text-3xl text-sub3`} />
-                  :
-                  <RiVolumeUpLine className={`text-3xl text-sub3`} />
-                  }
+                  <RiAtLine className={`text-3xl text-sub3`} />
                 </div>
-                <div>
-                  <div className="flex gap-2">
-                    <h1 className="text-white font-medium">{channelName}</h1>
-                    {isStarred ?
-                      <button className="text-2xl text-gold">
-                        <RiStarSFill />
-                      </button>
-                      :
-                      <button className="text-2xl text-gold">
-                        <RiStarSLine />
-                      </button>
-                    }
-                  </div>
-                  <p className="text-sm whitespace-nowrap text-sub3">{topic}</p>
+                <div className="my-auto">
+                  <h1 className="text-white font-medium">{channelUser.name}</h1>
                 </div>
               </div>
-              <button className="w-12 h-12 items-center flex group justify-center rounded-full">
-                <RiGroupLine className="text-2xl text-white" />
-              </button>
             </div>
             <div className="flex-grow w-full relative overflow-hidden">
               <div className="grow-0 chat-scrollbar h-full flex flex-col pl-2 py-4 text-white font-sans bg-dark overflow-y-scroll overflow-x-hidden" ref={chatBox} onScroll={manageScroll}>
@@ -347,10 +295,10 @@ export default function Dashboard({ Component, pageProps }) {
                 const lastMessage = index === 0;
                 const prevMessage = index > 0 ? sampleChat[index - 1] : null;
                 const authorId = message.author;
-                const username = 'Deleted User';
+                const username = users.get(authorId)?.name || 'Deleted User';
                 // get time HH:MM AM/PM
                 const time = message.date.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
-                const avatarURL = null;
+                const avatarURL = users.get(authorId)?.profileUrl;
                 // if the time difference since the last message is more than 10 minutes
                 const timeDifference = prevMessage ? message.date.getTime() - prevMessage.date.getTime() : 0;
                 const newSection = timeDifference > 600000; // 10 minutes in milliseconds
@@ -358,10 +306,11 @@ export default function Dashboard({ Component, pageProps }) {
                 const newDay = prevMessage ? message.date.getDate() !== prevMessage.date.getDate() : true;
                 const relativeDay = getRelativeDay(message.date);
                 const makeBig = isOnlyEmojis(message.content.text) && lengthNoSpaces(message.content.text) <=  50;
-                if (authorId === undefined) {
-                  if(!prevMessage || prevMessage.author !== undefined || newSection) {
+                console.log(lengthNoSpaces(message.content.text));
+                if (authorId === userId) {
+                  if(!prevMessage || prevMessage.author !== userId || newSection) {
                     return (
-                      <div className="flex justify-end pt-5 w-[calc(100vw-43rem)] overflow-hidden gap-2 pr-2 flex-shrink-0" key={index}>
+                      <div className="flex justify-end pt-5 w-[calc(100vw-25rem)] overflow-hidden gap-2 pr-2 flex-shrink-0" key={index}>
                         <div className="msg-gradient rounded-xl rounded-tr-none max-w-[75%] flex flex-col">
                           <div className="w-full flex-grow rounded-xl rounded-tr-none bg-primary-2 py-3 px-4">
                             <div className="flex w-full justify-between items-center gap-4">
@@ -376,7 +325,7 @@ export default function Dashboard({ Component, pageProps }) {
                     )
                   } else {
                     return (
-                      <div className="flex justify-end w-[calc(100vw-43rem)] items-center pt-1 flex-shrink-0" key={index}>
+                      <div className="flex justify-end w-[calc(100vw-25rem)] items-center pt-1 flex-shrink-0" key={index}>
                         <div className="message msg-gradient relative rounded-xl max-w-[66%] flex flex-col">
                           <div className="w-full flex-grow rounded-xl bg-primary-2 py-3 px-4">
                             <p className={`text-white ${makeBig ? 'text-3xl' : 'text-sm'} break-words whitespace-pre-wrap`} dangerouslySetInnerHTML={{ __html: urlify(message.content.text) }}></p>
@@ -391,7 +340,7 @@ export default function Dashboard({ Component, pageProps }) {
                 } else {
                   if(!prevMessage || prevMessage.author !== authorId) {
                     return (
-                      <div className="flex justify-start w-[calc(100vw-44rem)] pt-5 gap-2 pl-2 flex-shrink-0" key={index}>
+                      <div className="flex justify-start w-[calc(100vw-25rem)] pt-5 gap-2 pl-2 flex-shrink-0" key={index}>
                         <div className="h-10 aspect-square rounded-full overflow-hidden" style={{backgroundImage: `url(${avatarURL})`, backgroundSize: '100% 100%'}} />
                         <div className="msg-gradient-gray relative rounded-xl rounded-tl-none max-w-[66%] flex flex-col">
                           <div className="w-full flex-grow rounded-xl rounded-tl-none bg-message py-3 px-4">
@@ -406,7 +355,7 @@ export default function Dashboard({ Component, pageProps }) {
                     )
                   } else {
                     return (
-                      <div className="flex justify-end items-center w-[calc(100vw-44rem)] pt-1 flex-row-reverse flex-shrink-0" key={index}>
+                      <div className="flex justify-end items-center w-[calc(100vw-25rem)] pt-1 flex-row-reverse flex-shrink-0" key={index}>
                         <div className="message msg-gradient-gray relative rounded-xl max-w-[66%] flex flex-col">
                           <div className="w-full flex-grow rounded-xl bg-message py-3 px-4">
                             <p className={`text-white ${makeBig ? 'text-2xl' : 'text-sm'} break-words whitespace-pre-wrap`}>{message.content.text}</p>
@@ -456,7 +405,6 @@ export default function Dashboard({ Component, pageProps }) {
               </div>
             </div>
           </div>
-          <MemberBar user={user} community={community} />
         </div>
       </div>
     </div>

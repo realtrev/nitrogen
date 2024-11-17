@@ -23,7 +23,7 @@ export default function MemberBar({community, user = null}) {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
-      // /api/users/762765642830315530
+      // /api/users/494249333986689035
       axios.get(`/api/users/${id}`).then((res) => {
         setUsers(res.data);
       }).catch((err) => {

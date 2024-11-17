@@ -26,7 +26,7 @@ const EmailVerificationSchema = new Schema({
   createdAt: {
     type: Date,
     default: Date.now(),
-    expires: '1m',
+    expires: '15m',
   },
   verified: {
     type: Boolean,
